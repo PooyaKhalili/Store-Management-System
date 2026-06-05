@@ -43,7 +43,7 @@ public class ProductPanel extends JPanel {
         buttonPanel = new JPanel();
         searchPanel = new JPanel();
         searchField = new JTextField();
-        comboBox = new JComboBox<String>(new String[] {"کد کالا", "نام کالا", "قیمت", "موجودی", "دسته‌بندی"});
+        comboBox = new JComboBox<String>(new String[] {});
 
         addButton = SetupUI.createButton(new Color(65, 115, 242),"افزودن +");
         editButton = SetupUI.createButton(new Color(251, 179, 22),"ویرایش ✏️");
@@ -67,7 +67,7 @@ public class ProductPanel extends JPanel {
     }
 
     private void createButtonPanel() {
-                buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.setBackground(Color.WHITE);
         buttonPanel.setLayout(new GridLayout(2, 8, 10,-25));
         buttonPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         buttonPanel.add(addButton);
@@ -91,27 +91,21 @@ public class ProductPanel extends JPanel {
         addButton.addActionListener(e -> {
             
         });
-
         editButton.addActionListener(e -> {
             
         });
-
         deleteButton.addActionListener(e -> {
             
         });
-
         refreshButton.addActionListener(e -> {
             
         });
-
         lowStockButton.addActionListener(e -> {
             
         });
-
         importCSV.addActionListener(e -> {
             
         });
-
         exportCSV.addActionListener(e -> {
             
         });

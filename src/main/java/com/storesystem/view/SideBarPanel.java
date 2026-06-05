@@ -8,8 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import com.storesystem.config.SetupUI;
-import com.storesystem.view.MainFrame;
-
 
 public class SideBarPanel extends JPanel {
 

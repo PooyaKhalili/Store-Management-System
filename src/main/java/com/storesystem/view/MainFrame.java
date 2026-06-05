@@ -3,9 +3,6 @@ package com.storesystem.view;
 import java.awt.ComponentOrientation;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import com.storesystem.view.HeadPanel;
-import com.storesystem.view.SideBarPanel;
-import com.storesystem.view.CategoryPanel;
 
 public class MainFrame extends JFrame {
 
@@ -13,8 +10,6 @@ public class MainFrame extends JFrame {
     private static SideBarPanel sidebarPanel;
     private static JPanel mainPanel;
     private static MainFrame mainFrame = new MainFrame();
-
-
 
     private MainFrame() {
         initComponents();

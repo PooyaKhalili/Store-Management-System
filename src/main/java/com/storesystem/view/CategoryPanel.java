@@ -10,10 +10,6 @@ import com.storesystem.util.TableUtil;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
-
-
-
-
 public class CategoryPanel extends JPanel {
 
     JPanel table;
