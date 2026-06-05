@@ -25,9 +25,10 @@ public class TableUtil {
         table.setShowVerticalLines(false); 
         table.setShowHorizontalLines(true); 
         table.setGridColor(new Color(235, 235, 235)); 
-        table.setSelectionBackground(new Color(237, 242, 252)); 
+        table.setSelectionBackground(new Color(237, 242, 252));
+        table.setSelectionForeground(new Color(40, 40, 40)); 
         table.setFillsViewportHeight(true); 
-        table.setFont(new Font("Vazir", Font.PLAIN, 13)); 
+        table.setFont(new Font("Vazir", Font.PLAIN, 12)); 
         table.setBackground(Color.WHITE);
 
         if (columnWidths != null && columnWidths.length == columnNames.length) {
@@ -61,7 +62,7 @@ public class TableUtil {
                 label.setBackground(new Color(250, 250, 250)); 
                 label.setForeground(new Color(80, 80, 80)); 
                 label.setHorizontalAlignment(SwingConstants.RIGHT);
-                label.setFont(new Font("Tahoma", Font.BOLD, 13));
+                label.setFont(new Font("Vazir", Font.BOLD, 12));
                 label.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(225, 225, 225)),
                     BorderFactory.createEmptyBorder(0, 0, 0, 15)
