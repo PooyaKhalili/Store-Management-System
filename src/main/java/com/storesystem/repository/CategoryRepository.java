@@ -49,7 +49,14 @@ public class CategoryRepository {
     public Category findCategoryById(int id){
         return storage.get(id);
     }
-    //public int findIdByCategoryName(String categoryName){}
+    public Category findCategoryByName(String categoryName){
+        for(Category c : storage.values()){
+            if(c.getName().equalsIgnoreCase(categoryName)){
+                return c;
+            }
+        }
+        return null;
+    }
     public Category saveCategory(Category category){
         if(category.getId() == 0){
             category.setId(id);
@@ -64,8 +71,18 @@ public class CategoryRepository {
         saveData();
         return category;
     }
+    public void deleteCategoryById(int id){
+        if(!storage.containsKey(id)){
+            throw new IllegalArgumentException("Category with id " + id + " does not exist, so it cannot be deleted");
+        }
+        storage.remove(id);
+        saveData();
+    }
     public boolean isIdFound(int id){
         return storage.containsKey(id);
+    }
+    public List<Category> findAllCategories(){
+        return new ArrayList<>(storage.values());
     }
 
 
