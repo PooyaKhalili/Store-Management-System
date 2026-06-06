@@ -12,12 +12,12 @@ import java.awt.GridLayout;
 
 public class CategoryPanel extends JPanel {
 
-    JPanel table;
-    JPanel buttonPanel;
-    JButton addButton;
-    JButton editButton;
-    JButton deleteButton;
-    JButton refreshButton;
+    private JPanel table;
+    private JPanel buttonPanel;
+    private JButton addButton;
+    private JButton editButton;
+    private JButton deleteButton;
+    private JButton refreshButton;
 
     public CategoryPanel() {
         initComponents();

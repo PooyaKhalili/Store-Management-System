@@ -17,20 +17,22 @@ import java.awt.GridLayout;
 
 public class ProductPanel extends JPanel {
 
-    JPanel productTable;
-    JButton addButton;
-    JButton deleteButton;
-    JButton refreshButton;
-    JButton importCSV;
-    JButton exportCSV;
-    JButton editButton;
-    JButton lowStockButton;
-    JPanel buttonPanel;
-    JLabel categoryLabel;
-    JLabel searchLabel;
-    JComboBox<String> comboBox;
-    JTextField searchField;
-    JPanel searchPanel;
+    private JPanel productTable;
+
+    private JButton addButton;
+    private JButton deleteButton;
+    private JButton refreshButton;
+    private JButton importCSV;
+    private JButton exportCSV;
+    private JButton editButton;
+    private JButton lowStockButton;
+    private JPanel buttonPanel;
+
+    private JLabel categoryLabel;
+    private JLabel searchLabel;
+    private JComboBox<String> comboBox;
+    private JTextField searchField;
+    private JPanel searchPanel;
 
 
     public ProductPanel() {
@@ -49,7 +51,9 @@ public class ProductPanel extends JPanel {
         searchPanel = new JPanel();
         searchField = new JTextField();
         categoryLabel = new JLabel("دسته‌بندی:");
+        categoryLabel.setFont(new java.awt.Font("Vazir", 0, 14));
         searchLabel = new JLabel("جست‌وجو:");
+        searchLabel.setFont(new java.awt.Font("Vazir", 0, 14));
         comboBox = new JComboBox<String>(new String[] {"همه"});
 
         addButton = SetupUI.createButton(new Color(65, 115, 242),"افزودن +");
@@ -81,7 +85,9 @@ public class ProductPanel extends JPanel {
         gbc.fill = java.awt.GridBagConstraints.NONE;
 
         comboBox.setPreferredSize(new java.awt.Dimension(120, 30));
+        comboBox.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         searchField.setPreferredSize(new java.awt.Dimension(250, 30));
+        searchField.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
         searchPanel.add(categoryLabel, gbc);
         searchPanel.add(comboBox, gbc);

@@ -1,6 +1,8 @@
 package com.storesystem.view;
 
 import java.awt.ComponentOrientation;
+import java.awt.Font;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -24,6 +26,7 @@ public class MainFrame extends JFrame {
 
     private void setupLayout() {
         applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        setFont(new Font("Vazir", Font.BOLD, 14));
         setTitle("سیستم مدیریت فروشگاه");
         setSize(1150, 600);
         setLocationRelativeTo(null);
