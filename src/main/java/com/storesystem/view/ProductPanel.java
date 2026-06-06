@@ -5,6 +5,8 @@ import javax.swing.JTextField;
 import com.storesystem.util.TableUtil;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+
 import com.storesystem.config.SetupUI;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
@@ -24,6 +26,8 @@ public class ProductPanel extends JPanel {
     JButton editButton;
     JButton lowStockButton;
     JPanel buttonPanel;
+    JLabel categoryLabel;
+    JLabel searchLabel;
     JComboBox<String> comboBox;
     JTextField searchField;
     JPanel searchPanel;
@@ -32,6 +36,7 @@ public class ProductPanel extends JPanel {
     public ProductPanel() {
         initComponents();
         createButtonPanel();
+        creatSearchPanel();
         setupLayout();
     }
 
@@ -43,7 +48,9 @@ public class ProductPanel extends JPanel {
         buttonPanel = new JPanel();
         searchPanel = new JPanel();
         searchField = new JTextField();
-        comboBox = new JComboBox<String>(new String[] {});
+        categoryLabel = new JLabel("دسته‌بندی:");
+        searchLabel = new JLabel("جست‌وجو:");
+        comboBox = new JComboBox<String>(new String[] {"همه"});
 
         addButton = SetupUI.createButton(new Color(65, 115, 242),"افزودن +");
         editButton = SetupUI.createButton(new Color(251, 179, 22),"ویرایش ✏️");
@@ -59,11 +66,33 @@ public class ProductPanel extends JPanel {
         setLayout(new BorderLayout());
         add(productTable, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
-        searchPanel.setLayout(new GridLayout(1, 20, 20, 0));
-        searchPanel.setBackground(Color.WHITE);
-        searchPanel.add(searchField);
-        searchPanel.add(comboBox);
         add(searchPanel, BorderLayout.NORTH);
+    }
+
+    private void creatSearchPanel() {
+        searchPanel.setBackground(new Color(245, 246, 248));
+        searchPanel.setLayout(new java.awt.GridBagLayout());
+        searchPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        searchPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 15, 10, 15));
+
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.insets = new java.awt.Insets(0, 5, 0, 15);
+        gbc.fill = java.awt.GridBagConstraints.NONE;
+
+        comboBox.setPreferredSize(new java.awt.Dimension(120, 30));
+        searchField.setPreferredSize(new java.awt.Dimension(250, 30));
+
+        searchPanel.add(categoryLabel, gbc);
+        searchPanel.add(comboBox, gbc);
+        searchPanel.add(searchLabel, gbc);
+        searchPanel.add(searchField, gbc);
+
+        gbc.weightx = 1.0;
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        javax.swing.JPanel spacer = new javax.swing.JPanel();
+        spacer.setOpaque(false); // نامرئی کردن فنر
+        searchPanel.add(spacer, gbc);
     }
 
     private void createButtonPanel() {
