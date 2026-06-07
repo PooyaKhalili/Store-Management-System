@@ -27,7 +27,7 @@ public class CategoryPanel extends JPanel {
 
     private void initComponents() {
         table = TableUtil.createTable(new Object[][] {}, 
-            new String[] { "شناسه", "نام دسته بندی"},
+            new String[] { "کد دسته بندی", "نام دسته بندی"},
             new int[] {80,450} );     
         buttonPanel = new JPanel();
         addButton = SetupUI.createButton(new Color(65, 115, 242), "افزودن +" );

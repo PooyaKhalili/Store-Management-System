@@ -67,11 +67,11 @@ public class OrderPanel extends JPanel {
 
     private void initComponents() {
         cartTable = TableUtil.createTable(new Object[][] {}, 
-                new String[] {"کد", "نام کالا", "قیمت", "موجودی", "دسته"},
+                new String[] {"کد کالا", "نام کالا", "قیمت", "موجودی", "دسته"},
                 new int[] {60, 180, 100, 60, 100} );
                 
         productTable = TableUtil.createTable(new Object[][] {}, 
-                new String[] {"کد", "کالا", "قیمت واحد", "تعداد", "جمع"},
+                new String[] {"کد کالا", "کالا", "قیمت واحد", "تعداد", "جمع"},
                 new int[] {60, 170, 100, 50, 120} );
 
         
@@ -147,6 +147,7 @@ private void creatSearchPanel() {
         gbc1.fill = GridBagConstraints.NONE;
         searchField1.setPreferredSize(new Dimension(150, 30));
         searchField1.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        searchField1.setFont(new Font("Vazir", Font.BOLD, 14));
         comboBox1.setPreferredSize(new Dimension(150, 30));
         comboBox1.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         addCustomerButton.setPreferredSize(new Dimension(110, 30));
@@ -174,6 +175,7 @@ private void creatSearchPanel() {
         
         searchField2.setPreferredSize(new Dimension(130, 30));
         searchField2.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        searchField2.setFont(new Font("Vazir", Font.BOLD, 14));
         comboBox2.setPreferredSize(new Dimension(100, 30));
         comboBox2.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 

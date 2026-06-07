@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-
 import com.storesystem.config.SetupUI;
 import com.storesystem.util.TableUtil;
 
@@ -48,7 +47,7 @@ public class HistoryPanel extends JPanel {
 
     private void initComponents() {
         topTablePanel = TableUtil.createTable(new Object[][] {}, 
-                new String[] {"شماره سفارش", "شناسه مشتری", "تاریخ جلالی", "جمع جزء", "تخفیف", "مالیات", "جمع کل"},
+                new String[] {"شماره سفارش", "کد مشتری", "تاریخ جلالی", "جمع جزء", "تخفیف", "مالیات", "جمع کل"},
                 new int[] {100, 100, 150, 100, 100, 100, 120} ); 
 
         bottomTablePanel = TableUtil.createTable(new Object[][] {}, 
@@ -80,7 +79,7 @@ public class HistoryPanel extends JPanel {
     }
 
     private void createSearchPanel() {
-        searchPanel.setBackground(new Color(245, 246, 248));
+        searchPanel.setBackground(Color.WHITE);
         searchPanel.setLayout(new GridBagLayout());
         searchPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));

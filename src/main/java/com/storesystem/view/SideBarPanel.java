@@ -72,7 +72,13 @@ public class SideBarPanel extends JPanel {
   
         });
         customerButton.addActionListener(e -> {
-            
+            SetupUI.updateButtonStyle(categoryButton, false);
+            SetupUI.updateButtonStyle(customerButton, true);
+            SetupUI.updateButtonStyle(shoppingCartButton, false);
+            SetupUI.updateButtonStyle(purchaseHistoryButton, false);
+            SetupUI.updateButtonStyle(reportButton, false);
+            SetupUI.updateButtonStyle(productButton, false);
+            MainFrame.switchPanel(new CustomerPanel());            
             
         });
         shoppingCartButton.addActionListener(e -> {
