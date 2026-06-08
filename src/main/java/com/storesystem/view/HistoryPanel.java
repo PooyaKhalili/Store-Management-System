@@ -142,8 +142,8 @@ public class HistoryPanel extends JPanel {
     }
 
     private void setupLayout() {
-        topTablePanel.setMinimumSize(new Dimension(0, 150));
-        bottomTablePanel.setMinimumSize(new Dimension(0, 150));
+        topTablePanel.setMinimumSize(new Dimension(0, 50));
+        bottomTablePanel.setMinimumSize(new Dimension(0, 50));
 
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topTablePanel, bottomTablePanel);
         splitPane.setResizeWeight(0.6);
