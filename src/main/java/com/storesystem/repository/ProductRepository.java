@@ -27,9 +27,9 @@ public class ProductRepository {
             List<Product> products = gson.fromJson(reader,typeList);
             if(products!=null &&  !products.isEmpty()){
                 for(Product product : products){
-                   long code = product.getCode();
-                   storage.put(code, product);
-                   usedCodes.add(code);
+                    long code = product.getCode();
+                    storage.put(code, product);
+                    usedCodes.add(code);
                 }
             }
         } catch (IOException e) {
@@ -68,7 +68,6 @@ public class ProductRepository {
         }
         storage.replace(product.getCode(), product);
         saveData();
-
     }
     public void deleteProduct(Product product){
         if(product.getCode()==0){
@@ -137,3 +136,4 @@ public class ProductRepository {
         return foundProducts;
     }
 }
+
