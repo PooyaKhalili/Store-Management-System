@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomerRepository {
-    private final String filePath = "data/Customers.json";
+    private final String filePath = "src\\data\\Customers.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<Integer, Customer> storage = new HashMap<>();
     private int nextId = 1;

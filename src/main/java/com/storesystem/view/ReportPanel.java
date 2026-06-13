@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -37,11 +39,11 @@ public class ReportPanel extends JPanel {
     }
 
     private void initComponents() {
-        topTable = TableUtil.createTable(new Object[][] {}, 
+        topTable = TableUtil.createTable(new ArrayList<>(), 
         new String[] {"نام کالا", "تعداد فروش"},
         new int[] {400, 200});
 
-        bottomTable = TableUtil.createTable(new Object[][] {}, 
+        bottomTable = TableUtil.createTable(new ArrayList<>(), 
         new String[] {"مشتری", "تعداد سفارش", "مجموع خرید"},
         new int[] {250, 150, 200});
 

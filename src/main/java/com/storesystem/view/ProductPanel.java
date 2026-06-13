@@ -15,6 +15,8 @@ import java.awt.GridLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import java.awt.Font;
 
@@ -48,7 +50,7 @@ public class ProductPanel extends JPanel {
 
     private void initComponents() {
         productTable = new JPanel();
-        productTable=TableUtil.createTable(new Object[][] {},
+        productTable=TableUtil.createTable(new ArrayList<>(),
                 new String[] {"کد کالا", "نام کالا", "قیمت", "موجودی", "دسته‌بندی"},
                 new int[] {90, 350, 130, 90, 180});
         buttonPanel = new JPanel();

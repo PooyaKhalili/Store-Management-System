@@ -6,6 +6,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -66,11 +67,11 @@ public class OrderPanel extends JPanel {
     }
 
     private void initComponents() {
-        cartTable = TableUtil.createTable(new Object[][] {}, 
+        cartTable = TableUtil.createTable(new ArrayList<>(), 
                 new String[] {"کد کالا", "نام کالا", "قیمت", "موجودی", "دسته"},
                 new int[] {60, 180, 100, 60, 100} );
                 
-        productTable = TableUtil.createTable(new Object[][] {}, 
+        productTable = TableUtil.createTable(new ArrayList<>(), 
                 new String[] {"کد کالا", "کالا", "قیمت واحد", "تعداد", "جمع"},
                 new int[] {60, 170, 100, 50, 120} );
 

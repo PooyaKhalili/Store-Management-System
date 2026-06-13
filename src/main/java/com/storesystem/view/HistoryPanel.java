@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -46,11 +48,11 @@ public class HistoryPanel extends JPanel {
     }
 
     private void initComponents() {
-        topTablePanel = TableUtil.createTable(new Object[][] {}, 
+        topTablePanel = TableUtil.createTable(new ArrayList<>(), 
                 new String[] {"شماره سفارش", "کد مشتری", "تاریخ جلالی", "جمع جزء", "تخفیف", "مالیات", "جمع کل"},
                 new int[] {100, 100, 150, 100, 100, 100, 120} ); 
 
-        bottomTablePanel = TableUtil.createTable(new Object[][] {}, 
+        bottomTablePanel = TableUtil.createTable(new ArrayList<>(), 
                 new String[] {"کالا", "قیمت واحد", "تعداد", "جمع"},
                 new int[] {300, 150, 80, 150} );
 

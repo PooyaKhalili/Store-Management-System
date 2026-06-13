@@ -9,6 +9,7 @@ import com.storesystem.config.SetupUI;
 import com.storesystem.util.TableUtil;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 
 public class CategoryPanel extends JPanel {
 
@@ -26,7 +27,7 @@ public class CategoryPanel extends JPanel {
     }
 
     private void initComponents() {
-        table = TableUtil.createTable(new Object[][] {}, 
+        table = TableUtil.createTable(new ArrayList<>() , 
             new String[] { "کد دسته بندی", "نام دسته بندی"},
             new int[] {80,450} );     
         buttonPanel = new JPanel();
