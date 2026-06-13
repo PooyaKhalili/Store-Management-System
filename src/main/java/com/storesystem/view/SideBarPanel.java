@@ -11,12 +11,12 @@ import com.storesystem.config.SetupUI;
 
 public class SideBarPanel extends JPanel {
 
-    JButton categoryButton;
-    JButton productButton;
-    JButton customerButton;
-    JButton shoppingCartButton;
-    JButton purchaseHistoryButton;
-    JButton reportButton;
+    private JButton categoryButton;
+    private JButton productButton;
+    private JButton customerButton;
+    private JButton shoppingCartButton;
+    private JButton purchaseHistoryButton;
+    private JButton reportButton;
 
     public SideBarPanel() {
 
@@ -72,7 +72,13 @@ public class SideBarPanel extends JPanel {
   
         });
         customerButton.addActionListener(e -> {
-            
+            SetupUI.updateButtonStyle(categoryButton, false);
+            SetupUI.updateButtonStyle(customerButton, true);
+            SetupUI.updateButtonStyle(shoppingCartButton, false);
+            SetupUI.updateButtonStyle(purchaseHistoryButton, false);
+            SetupUI.updateButtonStyle(reportButton, false);
+            SetupUI.updateButtonStyle(productButton, false);
+            MainFrame.switchPanel(new CustomerPanel());            
             
         });
         shoppingCartButton.addActionListener(e -> {
@@ -86,10 +92,17 @@ public class SideBarPanel extends JPanel {
             
         });
         purchaseHistoryButton.addActionListener(e -> {
+            SetupUI.updateButtonStyle(categoryButton, false);
+            SetupUI.updateButtonStyle(customerButton, false);
+            SetupUI.updateButtonStyle(shoppingCartButton, false);
+            SetupUI.updateButtonStyle(purchaseHistoryButton, true);
+            SetupUI.updateButtonStyle(reportButton, false);
+            SetupUI.updateButtonStyle(productButton, false);
+            MainFrame.switchPanel(new HistoryPanel());
             
         });
         reportButton.addActionListener(e -> {
-                        SetupUI.updateButtonStyle(categoryButton, false);
+            SetupUI.updateButtonStyle(categoryButton, false);
             SetupUI.updateButtonStyle(customerButton, false);
             SetupUI.updateButtonStyle(shoppingCartButton, false);
             SetupUI.updateButtonStyle(purchaseHistoryButton, false);

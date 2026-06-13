@@ -17,17 +17,18 @@ import com.storesystem.util.TableUtil;
 
 public class ReportPanel extends JPanel {
 
-    JPanel topTable;
-    JPanel bottomTable;
-    JButton refreshButton;
-    JLabel totalRevenueLabel;
-    JLabel topTitleLabel;
-    JLabel bottomTitleLabel;
-    JPanel footerPanel;
-    JPanel topPanel;
-    JPanel bottomPanel;
-    JSplitPane splitPane;
-    int total=0;
+    private JPanel topTable;
+    private JPanel bottomTable;
+
+    private JButton refreshButton;
+    private JLabel totalRevenueLabel;
+    private JLabel topTitleLabel;
+    private JLabel bottomTitleLabel;
+    private JPanel footerPanel;
+    private JPanel topPanel;
+    private JPanel bottomPanel;
+    private JSplitPane splitPane;
+    private int total=0;
 
     public ReportPanel() {
         initComponents();

@@ -23,32 +23,39 @@ import com.storesystem.util.TableUtil;
 
 public class OrderPanel extends JPanel {
 
-    JPanel productTable;
-    JPanel cartTable;
-    JButton addCustomerButton;
-    JButton payButton;
-    JButton deleteButton;
-    JButton refreshButton;
-    JButton addToCartButton;
-    JButton editButton;
-    JPanel buttonPanel1;
-    JPanel buttonPanel2;
-    JComboBox<String> comboBox1;
-    JTextField searchField1;
-    JComboBox<String> comboBox2;
-    JTextField searchField2;
-    JPanel searchPanel1;
-    JPanel searchPanel2;
-    JPanel panel1;
-    JPanel panel2;
-    JSplitPane splitPane;
-    JPanel lablePanel;
-    JLabel totalSumLabel;
-    JLabel searchCustomerLabel;
-    JLabel selectCustomerLabel;
-    JLabel searchProductLabel;
-    JLabel categoryLabel;
-    int total=0;
+    private JPanel productTable;
+    private JPanel cartTable;
+
+    private JButton addCustomerButton;
+
+    private JButton payButton;
+    private JButton deleteButton;
+    private JButton refreshButton;
+    private JButton editButton;
+    private JPanel buttonPanel1;
+
+    private JButton addToCartButton;
+    private JPanel buttonPanel2;
+
+    private JComboBox<String> comboBox1;
+    private JTextField searchField1;
+    private JComboBox<String> comboBox2;
+    private JTextField searchField2;
+    private JLabel searchCustomerLabel;
+    private JLabel selectCustomerLabel;
+    private JLabel searchProductLabel;
+    private JLabel categoryLabel;
+    private JPanel searchPanel1;
+    private JPanel searchPanel2;
+
+    private JPanel panel1;
+    private JPanel panel2;
+    private JSplitPane splitPane;
+
+    private JPanel lablePanel;
+    private JLabel totalSumLabel;
+
+    private int total=0;
 
 
     public OrderPanel() {
@@ -60,11 +67,11 @@ public class OrderPanel extends JPanel {
 
     private void initComponents() {
         cartTable = TableUtil.createTable(new Object[][] {}, 
-                new String[] {"کد", "نام کالا", "قیمت", "موجودی", "دسته"},
+                new String[] {"کد کالا", "نام کالا", "قیمت", "موجودی", "دسته"},
                 new int[] {60, 180, 100, 60, 100} );
                 
         productTable = TableUtil.createTable(new Object[][] {}, 
-                new String[] {"کد", "کالا", "قیمت واحد", "تعداد", "جمع"},
+                new String[] {"کد کالا", "کالا", "قیمت واحد", "تعداد", "جمع"},
                 new int[] {60, 170, 100, 50, 120} );
 
         
@@ -76,7 +83,7 @@ public class OrderPanel extends JPanel {
 
         editButton = SetupUI.createButton(new Color(251, 179, 22), "ویرایش تعداد ✏️");
 
-        refreshButton = SetupUI.createButton(new Color(23, 162, 184), "رفرش 🔄");
+        refreshButton = SetupUI.createButton(new Color(23, 162, 184), "بروزرسانی 🔄");
 
         addToCartButton = SetupUI.createButton(new Color(65, 115, 242), "افزودن به سبد +"); 
         addToCartButton.setHorizontalAlignment(SwingConstants.CENTER);
@@ -93,10 +100,14 @@ public class OrderPanel extends JPanel {
         panel2 = new JPanel();
         lablePanel = new JPanel();
 
-        searchCustomerLabel = new JLabel("جستجوی مشتری:");
+        searchCustomerLabel = new JLabel("جست‌وجو مشتری:");
+        searchCustomerLabel.setFont(new Font("Vazir", Font.BOLD, 14));
         selectCustomerLabel = new JLabel("انتخاب مشتری:");
-        searchProductLabel = new JLabel("جستجوی کد/نام:");
+        selectCustomerLabel.setFont(new Font("Vazir", Font.BOLD, 14));
+        searchProductLabel = new JLabel("جست‌وجو کد/نام:");
+        searchProductLabel.setFont(new Font("Vazir", Font.BOLD, 14));
         categoryLabel = new JLabel("دسته:");
+        categoryLabel.setFont(new Font("Vazir", Font.BOLD, 14));
         
         totalSumLabel = new JLabel("جمع کل: "+total+" ریال");
         totalSumLabel.setFont(new Font("Vazir", Font.BOLD, 14));
@@ -133,9 +144,12 @@ private void creatSearchPanel() {
         GridBagConstraints gbc1 = new GridBagConstraints();
         gbc1.gridy = 0;
         gbc1.insets = new Insets(10, 5, 10, 5);
-        gbc1.fill = GridBagConstraints.NONE;        
+        gbc1.fill = GridBagConstraints.NONE;
         searchField1.setPreferredSize(new Dimension(150, 30));
+        searchField1.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        searchField1.setFont(new Font("Vazir", Font.BOLD, 14));
         comboBox1.setPreferredSize(new Dimension(150, 30));
+        comboBox1.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         addCustomerButton.setPreferredSize(new Dimension(110, 30));
  
         searchPanel1.add(addCustomerButton, gbc1);
@@ -160,7 +174,10 @@ private void creatSearchPanel() {
         gbc2.fill = GridBagConstraints.NONE;
         
         searchField2.setPreferredSize(new Dimension(130, 30));
+        searchField2.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        searchField2.setFont(new Font("Vazir", Font.BOLD, 14));
         comboBox2.setPreferredSize(new Dimension(100, 30));
+        comboBox2.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
         searchPanel2.add(searchProductLabel, gbc2);
         searchPanel2.add(searchField2, gbc2);

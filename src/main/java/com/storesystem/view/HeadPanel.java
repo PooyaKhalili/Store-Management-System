@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 
 public class HeadPanel extends JPanel {
 
-    JLabel label;
+    private JLabel label;
 
     public HeadPanel(){
         

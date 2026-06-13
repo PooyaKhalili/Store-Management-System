@@ -12,12 +12,12 @@ import java.awt.GridLayout;
 
 public class CategoryPanel extends JPanel {
 
-    JPanel table;
-    JPanel buttonPanel;
-    JButton addButton;
-    JButton editButton;
-    JButton deleteButton;
-    JButton refreshButton;
+    private JPanel table;
+    private JPanel buttonPanel;
+    private JButton addButton;
+    private JButton editButton;
+    private JButton deleteButton;
+    private JButton refreshButton;
 
     public CategoryPanel() {
         initComponents();
@@ -27,7 +27,7 @@ public class CategoryPanel extends JPanel {
 
     private void initComponents() {
         table = TableUtil.createTable(new Object[][] {}, 
-            new String[] { "شناسه", "نام دسته بندی"},
+            new String[] { "کد دسته بندی", "نام دسته بندی"},
             new int[] {80,450} );     
         buttonPanel = new JPanel();
         addButton = SetupUI.createButton(new Color(65, 115, 242), "افزودن +" );

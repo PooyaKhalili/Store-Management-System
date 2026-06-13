@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatIntelliJLaf());
         } catch (Exception ex) {
             System.err.println("Failed to initialize LaF");
         }

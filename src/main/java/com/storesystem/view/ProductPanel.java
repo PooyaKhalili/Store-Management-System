@@ -6,31 +6,37 @@ import com.storesystem.util.TableUtil;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-
 import com.storesystem.config.SetupUI;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.BorderFactory;
+import java.awt.Font;
 
 
 public class ProductPanel extends JPanel {
 
-    JPanel productTable;
-    JButton addButton;
-    JButton deleteButton;
-    JButton refreshButton;
-    JButton importCSV;
-    JButton exportCSV;
-    JButton editButton;
-    JButton lowStockButton;
-    JPanel buttonPanel;
-    JLabel categoryLabel;
-    JLabel searchLabel;
-    JComboBox<String> comboBox;
-    JTextField searchField;
-    JPanel searchPanel;
+    private JPanel productTable;
+
+    private JButton addButton;
+    private JButton deleteButton;
+    private JButton refreshButton;
+    private JButton importCSV;
+    private JButton exportCSV;
+    private JButton editButton;
+    private JButton lowStockButton;
+    private JPanel buttonPanel;
+
+    private JLabel categoryLabel;
+    private JLabel searchLabel;
+    private JComboBox<String> comboBox;
+    private JTextField searchField;
+    private JPanel searchPanel;
 
 
     public ProductPanel() {
@@ -48,8 +54,11 @@ public class ProductPanel extends JPanel {
         buttonPanel = new JPanel();
         searchPanel = new JPanel();
         searchField = new JTextField();
+        searchField.setFont(new Font("Vazir", Font.BOLD, 14));
         categoryLabel = new JLabel("دسته‌بندی:");
+        categoryLabel.setFont(new Font("Vazir", Font.BOLD, 14));
         searchLabel = new JLabel("جست‌وجو:");
+        searchLabel.setFont(new Font("Vazir", Font.BOLD, 14));
         comboBox = new JComboBox<String>(new String[] {"همه"});
 
         addButton = SetupUI.createButton(new Color(65, 115, 242),"افزودن +");
@@ -71,17 +80,20 @@ public class ProductPanel extends JPanel {
 
     private void creatSearchPanel() {
         searchPanel.setBackground(new Color(245, 246, 248));
-        searchPanel.setLayout(new java.awt.GridBagLayout());
+        searchPanel.setLayout(new GridBagLayout());
         searchPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        searchPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
-        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
-        gbc.insets = new java.awt.Insets(0, 5, 0, 15);
-        gbc.fill = java.awt.GridBagConstraints.NONE;
+        gbc.insets = new Insets(0, 5, 0, 15);
+        gbc.fill = GridBagConstraints.NONE;
 
-        comboBox.setPreferredSize(new java.awt.Dimension(120, 30));
-        searchField.setPreferredSize(new java.awt.Dimension(250, 30));
+        comboBox.setPreferredSize(new Dimension(120, 30));
+        comboBox.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        searchField.setPreferredSize(new Dimension(250, 30));
+        searchField.setFont(new Font("Vazir", Font.BOLD, 14));
+        searchField.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
         searchPanel.add(categoryLabel, gbc);
         searchPanel.add(comboBox, gbc);
@@ -89,8 +101,8 @@ public class ProductPanel extends JPanel {
         searchPanel.add(searchField, gbc);
 
         gbc.weightx = 1.0;
-        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        javax.swing.JPanel spacer = new javax.swing.JPanel();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel spacer = new JPanel();
         spacer.setOpaque(false); // نامرئی کردن فنر
         searchPanel.add(spacer, gbc);
     }
