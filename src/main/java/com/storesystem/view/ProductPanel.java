@@ -115,7 +115,7 @@ public class ProductPanel extends JPanel {
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         JPanel spacer = new JPanel();
-        spacer.setOpaque(false); // نامرئی کردن فنر
+        spacer.setOpaque(false);
         searchPanel.add(spacer, gbc);
     }
 
@@ -143,20 +143,15 @@ public class ProductPanel extends JPanel {
 private void addActionListeners() {
         Font vazirFont = new Font("Vazir", Font.PLAIN, 14);
 
-        // ==========================================
-        // ۱. دکمه افزودن کالا
-        // ==========================================
         addButton.addActionListener(e -> {
             JTextField nameField = new JTextField();
             JTextField priceField = new JTextField();
             JTextField stockField = new JTextField();
             
-            // گرفتن لیست دسته‌بندی‌ها از منوی کشویی اصلی برای نمایش در پاپ‌آپ (بدون گزینه "همه")
             JComboBox<String> categoryCombo = new JComboBox<>();
             for (int i = 1; i < comboBox.getItemCount(); i++) {
                 categoryCombo.addItem(comboBox.getItemAt(i));
             }
-            // اگر منوی اصلی خالی بود، یک فیلد متنی پیش‌فرض قرار می‌دهیم تا ارور ندهد
             if (categoryCombo.getItemCount() == 0) {
                 categoryCombo.addItem("نامشخص");
             }
@@ -227,9 +222,6 @@ private void addActionListeners() {
             }
         });
 
-        // ==========================================
-        // ۲. دکمه ویرایش کالا
-        // ==========================================
         editButton.addActionListener(e -> {
             javax.swing.JTable tableInstance = TableUtil.getTableFromPanel(productTable);
             if (tableInstance == null) return;
@@ -244,7 +236,6 @@ private void addActionListeners() {
                 return;
             }
 
-            // استخراج اطلاعات ردیف انتخاب شده برای پر کردن اولیه فیلدها
             String codeStr = tableInstance.getValueAt(selectedRow, 0).toString();
             String oldName = tableInstance.getValueAt(selectedRow, 1).toString();
             String oldPrice = tableInstance.getValueAt(selectedRow, 2).toString();
@@ -328,9 +319,6 @@ private void addActionListeners() {
             }
         });
 
-        // ==========================================
-        // ۳. دکمه حذف کالا
-        // ==========================================
         deleteButton.addActionListener(e -> {
             javax.swing.JTable tableInstance = TableUtil.getTableFromPanel(productTable);
             if (tableInstance != null) {
@@ -358,29 +346,20 @@ private void addActionListeners() {
             }   
         });
 
-        // ==========================================
-        // ۴. دکمه بروزرسانی جدول
-        // ==========================================
         refreshButton.addActionListener(e -> {
             if (controller != null) {
-                searchField.setText(""); // پاک کردن متن سرچ
-                controller.loadCategoriesIntoComboBox(); // لود مجدد و یک‌باره دسته‌بندی‌ها
-                TableUtil.refreshTable(productTable, controller.getAllProducts()); // آپدیت جدول کالاها
+                searchField.setText("");
+                controller.loadCategoriesIntoComboBox();
+                TableUtil.refreshTable(productTable, controller.getAllProducts());
             }
         });
 
-        // ==========================================
-        // ۵. دکمه گزارش کمبود موجودی
-        // ==========================================
         lowStockButton.addActionListener(e -> {
             if (controller != null) {
                 controller.showLowStockProducts();
             }
         });
 
-        // ==========================================
-        // ۶. جستجو (تغییر در تکست فیلد و کومبوباکس)
-        // ==========================================
         searchField.addActionListener(e -> {
             if (controller != null) {
                 String text = searchField.getText().trim();
@@ -397,9 +376,6 @@ private void addActionListeners() {
             }
         });
 
-        // ==========================================
-        // ۷. ورود و خروج CSV (پلیس‌هولدر تا زمان نوشتن متدها)
-        // ==========================================
         importCSV.addActionListener(e -> {
             UIManager.put("OptionPane.messageFont", vazirFont);
             JOptionPane.showMessageDialog(this, "این قابلیت به زودی در دسترس خواهد بود.", "اطلاعیه", JOptionPane.INFORMATION_MESSAGE);

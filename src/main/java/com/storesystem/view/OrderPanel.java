@@ -38,9 +38,9 @@ public class OrderPanel extends JPanel {
     private JButton addToCartButton;
     private JPanel buttonPanel2;
 
-    private JComboBox<String> comboBox1;
+    public JComboBox<String> comboBox1;
     private JTextField searchField1;
-    private JComboBox<String> comboBox2;
+    public JComboBox<String> comboBox2;
     private JTextField searchField2;
     private JLabel searchCustomerLabel;
     private JLabel selectCustomerLabel;

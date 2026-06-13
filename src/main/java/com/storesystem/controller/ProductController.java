@@ -31,7 +31,6 @@ public class ProductController {
             int stock = Integer.parseInt(stockStr);
             int categoryId = getCategoryIdByName(categoryName);
 
-            // بررسی تکراری بودن نام کالا (دقیقاً با سبک حلقه‌های خودت)
             for(Product product : productService.getAllProducts()){
                 if (name.equals(product.getName())) {
                     return "کالا با این نام قبلا ثبت شده است";
@@ -45,7 +44,6 @@ public class ProductController {
             return e.getMessage();
         }
         
-        // رفرش کردن جدول با دسترسی مستقیم به متغیر پابلیک پنل
         TableUtil.refreshTable(productPanel.productTable, this.getAllProducts());
         return "کالا با موفقیت اضافه شد";
     }
@@ -102,30 +100,25 @@ public class ProductController {
         try{
             productService.deleteProduct(code);
         }catch(Exception e){
-            return; // دقیقاً مشابه متد deleteCustomer شما
+            return; 
         }
         TableUtil.refreshTable(productPanel.productTable, this.getAllProducts());
     }
 
     public void loadCategoriesIntoComboBox() {
         try {
-            // ۱. ساخت یک «مدل» کاملاً جدید و مستقل
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             
-            // ۲. اضافه کردن گزینه پیش‌فرض
             model.addElement("همه");
 
-            // ۳. گرفتن لیست از دیتابیس
             List<Category> categories = categoryService.getAllCategories();
             
-            // ۴. شرط بسیار مهم: اگر لیست null نبود، دسته‌بندی‌ها را به مدل اضافه کن
             if (categories != null) {
                 for (Category category : categories) {
                     model.addElement(category.getName());
                 }
             }
 
-            // ۵. تزریق یک‌باره‌ی کل مدل به کمبوباکس (بدون درگیری با اکشن‌لیسنرها)
             productPanel.comboBox.setModel(model);
 
         } catch (Exception e) {
@@ -136,7 +129,6 @@ public class ProductController {
     public void searchProduct(String text, String categoryName) {
         List<Product> uniqueProducts = new ArrayList<>();
 
-        // ۱. جستجوی متنی (با نام یا کد)
         if (text != null && !text.trim().isEmpty()) {
             
             List<Product> allResults = new ArrayList<>();
@@ -152,10 +144,9 @@ public class ProductController {
                     allResults.add(productByCode);
                 }
             } catch (Exception e) {
-                // اگر متن وارد شده عدد نبود، نادیده می‌گیریم
+
             }
 
-            // حذف نتایج تکراری از لیست جستجو (دقیقاً با الگوریتم شما)
             for (Product currentProduct : allResults) {
                 boolean isDuplicate = false;
                 
@@ -174,7 +165,6 @@ public class ProductController {
             uniqueProducts.addAll(productService.getAllProducts());
         }
 
-        // ۲. اعمال فیلتر دسته‌بندی روی نتایج بالا
         if (categoryName != null && !categoryName.equals("همه")) {
             int targetCategoryId = getCategoryIdByName(categoryName);
             List<Product> filteredByCategory = new ArrayList<>();
@@ -184,10 +174,9 @@ public class ProductController {
                     filteredByCategory.add(p);
                 }
             }
-            uniqueProducts = filteredByCategory; // جایگزینی لیست با لیست فیلتر شده
+            uniqueProducts = filteredByCategory;
         }
 
-        // ۳. ساخت دیتای نهایی برای جدول
         List<Object[]> data = new ArrayList<>();
         for (Product product : uniqueProducts) {
             String formattedPrice = priceFormatter.format(product.getPrice());
@@ -223,10 +212,6 @@ public class ProductController {
             System.err.println(e.getMessage());
         }
     }
-
-    // =======================================================
-    // متدهای کمکی برای تبدیل نام دسته‌بندی به آیدی و برعکس
-    // =======================================================
     
     private int getCategoryIdByName(String name) {
         for (Category category : categoryService.getAllCategories()) {

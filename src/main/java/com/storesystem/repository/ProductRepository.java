@@ -79,7 +79,7 @@ public class ProductRepository {
         storage.remove(product.getCode());
         saveData();
     }
-    public List<Product> searchProductsByCategory(int categoryId){
+    public List<Product> searchProductsByCategory(long categoryId){
         List<Product> foundproducts = new ArrayList<>();
         for(Product product : storage.values()){
             if(categoryId == product.getCategoryId()){

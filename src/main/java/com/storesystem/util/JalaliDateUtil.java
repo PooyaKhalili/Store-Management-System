@@ -2,12 +2,8 @@ package com.storesystem.util;
 
 public class JalaliDateUtil {
 
-    // سازنده private برای جلوگیری از ساختن شیء (چون کلاس Utility است)
     private JalaliDateUtil() {}
 
-    /**
-     * مقایسه دو تاریخ شمسی با فرمت YYYY/MM/DD HH:mm
-     */
     public static int compareJalaliDates(String date1, String date2) {
         String[] parts1 = date1.split(" ");
         String[] parts2 = date2.split(" ");
@@ -44,9 +40,6 @@ public class JalaliDateUtil {
         return 0; 
     }
 
-    /**
-     * تولید تاریخ و ساعت فعلی به صورت شمسی
-     */
     public static String getCurrentJalaliDateTime() {
         java.time.LocalDateTime now = java.time.LocalDateTime.now();
         int gYear = now.getYear();

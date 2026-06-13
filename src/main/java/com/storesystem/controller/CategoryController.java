@@ -18,9 +18,7 @@ public class CategoryController {
     }
 
     public String addCategory(String name) {
-        // بررسی تکراری بودن دقیقاً به سبک خودت
         for(Category category : categoryService.getAllCategories()){
-            // در جاوا برای مقایسه متن‌ها حتماً از equals استفاده می‌کنیم تا باگ ایجاد نشود
             if (name.equals(category.getName())) {
                 return "دسته‌بندی با این نام قبلا ثبت شده است";
             }
@@ -30,7 +28,6 @@ public class CategoryController {
         }catch(Exception e){
             return e.getMessage();
         }
-        // دسترسی مستقیم به متغیر public پنل (table)
         TableUtil.refreshTable(categoryPanel.table, this.getAllCategories());
         return "دسته‌بندی با موفقیت اضافه شد";
     }

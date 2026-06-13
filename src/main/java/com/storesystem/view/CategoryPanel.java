@@ -74,9 +74,6 @@ public class CategoryPanel extends JPanel {
     }
 
 private void addActionListeners() {
-        // ==========================================
-        // ۱. دکمه افزودن دسته‌بندی
-        // ==========================================
         addButton.addActionListener(e -> {
             Font vazirFont = new Font("Vazir", Font.PLAIN, 14);
 
@@ -138,9 +135,6 @@ private void addActionListeners() {
             }
         });
 
-        // ==========================================
-        // ۲. دکمه ویرایش دسته‌بندی
-        // ==========================================
         editButton.addActionListener(e -> {
             JTable tableInstance = TableUtil.getTableFromPanel(table);
             if (tableInstance == null) return;
@@ -209,9 +203,6 @@ private void addActionListeners() {
             }
         });
 
-        // ==========================================
-        // ۳. دکمه حذف دسته‌بندی
-        // ==========================================
         deleteButton.addActionListener(e -> {
             JTable tableInstance = TableUtil.getTableFromPanel(table);
             if (tableInstance != null) {
@@ -234,9 +225,6 @@ private void addActionListeners() {
             }   
         });
 
-        // ==========================================
-        // ۴. دکمه بروزرسانی
-        // ==========================================
         refreshButton.addActionListener(e -> {
             TableUtil.refreshTable(table, controller.getAllCategories());
         });

@@ -12,13 +12,12 @@ public class JalaliDatePickerDialog extends JDialog {
     private JSpinner hourSpinner;
     private JSpinner minuteSpinner;
     private JPanel daysPanel;
-    private JLabel livePreviewLabel; // لیبل برای نمایش زنده تاریخ انتخاب شده
+    private JLabel livePreviewLabel;
     private List<JButton> dayButtons; 
     
     private int selectedDay = 1; 
     private String selectedDate = null; 
 
-    // تایتل به صورت داینامیک در اینجا دریافت می‌شود
     public JalaliDatePickerDialog(Window parent, String title) {
         super(parent, title, ModalityType.APPLICATION_MODAL);
         initComponents();
@@ -32,9 +31,6 @@ public class JalaliDatePickerDialog extends JDialog {
         applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         dayButtons = new ArrayList<>();
 
-        // ---------------------------------------------------------
-        // ۱. بخش بالا (انتخاب ماه و سال)
-        // ---------------------------------------------------------
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         topPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         
@@ -42,7 +38,6 @@ public class JalaliDatePickerDialog extends JDialog {
         monthCombo = new JComboBox<>(months);
         monthCombo.setFont(vazirFont);
         
-        // ساخت سال‌های داینامیک (مثلاً از ۱۳۹۰ تا ۱۴۵۰)
         Integer[] years = new Integer[61];
         for (int i = 0; i <= 60; i++) {
             years[i] = 1390 + i;
@@ -55,9 +50,6 @@ public class JalaliDatePickerDialog extends JDialog {
         topPanel.add(new JLabel("سال:"));
         topPanel.add(yearCombo);
 
-        // ---------------------------------------------------------
-        // ۲. بخش وسط (شبکه روزهای ماه)
-        // ---------------------------------------------------------
         daysPanel = new JPanel(new GridLayout(0, 7, 2, 2));
         daysPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         daysPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -78,19 +70,15 @@ public class JalaliDatePickerDialog extends JDialog {
             dayBtn.addActionListener(e -> {
                 selectedDay = currentDay;
                 refreshDayButtonsColor(); 
-                updateLivePreview(); // آپدیت پیش‌نمایش با کلیک روی روز
+                updateLivePreview();
             });
             
             dayButtons.add(dayBtn);
             daysPanel.add(dayBtn);
         }
 
-        // ---------------------------------------------------------
-        // ۳. بخش پایین (ساعت، پیش‌نمایش و دکمه‌ها)
-        // ---------------------------------------------------------
         JPanel bottomWrapperPanel = new JPanel(new BorderLayout());
         
-        // پنل انتخاب ساعت
         JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         timePanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
@@ -104,7 +92,6 @@ public class JalaliDatePickerDialog extends JDialog {
         timePanel.add(new JLabel("دقیقه"));
         timePanel.add(minuteSpinner);
 
-        // پنل دکمه‌ها و پیش‌نمایش
         JPanel actionPanel = new JPanel(new BorderLayout(10, 10));
         actionPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
         actionPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -128,38 +115,27 @@ public class JalaliDatePickerDialog extends JDialog {
         bottomWrapperPanel.add(timePanel, BorderLayout.NORTH);
         bottomWrapperPanel.add(actionPanel, BorderLayout.SOUTH);
 
-        // ---------------------------------------------------------
-        // ۴. تنظیم مقادیر پیش‌فرض به زمان حال
-        // ---------------------------------------------------------
         setInitialTimeToNow();
 
-        // ---------------------------------------------------------
-        // ۵. لاجیک آپدیت زنده با تغییر مقادیر
-        // ---------------------------------------------------------
         monthCombo.addActionListener(e -> updateLivePreview());
         yearCombo.addActionListener(e -> updateLivePreview());
         hourSpinner.addChangeListener(e -> updateLivePreview());
         minuteSpinner.addChangeListener(e -> updateLivePreview());
 
-        // منطق دکمه‌های تایید و انصراف
         btnConfirm.addActionListener(e -> {
             generateSelectedDateString();
             dispose();
         });
         btnCancel.addActionListener(e -> dispose());
 
-        // چیدمان کل فرم
         add(topPanel, BorderLayout.NORTH);
         add(daysPanel, BorderLayout.CENTER);
         add(bottomWrapperPanel, BorderLayout.SOUTH);
     }
 
-    /**
-     * گرفتن تاریخ سیستم و ست کردن آن روی فرم در لحظه باز شدن
-     */
     private void setInitialTimeToNow() {
         try {
-            String now = JalaliDateUtil.getCurrentJalaliDateTime(); // فرمت: 1405/03/06 14:30
+            String now = JalaliDateUtil.getCurrentJalaliDateTime();
             
             int currYear = Integer.parseInt(now.substring(0, 4));
             int currMonth = Integer.parseInt(now.substring(5, 7));
@@ -174,7 +150,7 @@ public class JalaliDatePickerDialog extends JDialog {
             minuteSpinner.setValue(currMinute);
 
             refreshDayButtonsColor();
-            updateLivePreview(); // تولید متن پیش‌نمایش اولیه
+            updateLivePreview();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,16 +160,13 @@ public class JalaliDatePickerDialog extends JDialog {
     private void refreshDayButtonsColor() {
         for (JButton btn : dayButtons) {
             if (Integer.parseInt(btn.getText()) == selectedDay) {
-                btn.setBackground(new Color(135, 206, 250)); // روز انتخاب شده (آبی)
+                btn.setBackground(new Color(135, 206, 250));
             } else {
-                btn.setBackground(Color.WHITE); // بقیه روزها
+                btn.setBackground(Color.WHITE);
             }
         }
     }
 
-    /**
-     * آپدیت کردن متن گوشه پنل در لحظه
-     */
     private void updateLivePreview() {
         int year = (Integer) yearCombo.getSelectedItem();
         int monthIndex = monthCombo.getSelectedIndex() + 1;
