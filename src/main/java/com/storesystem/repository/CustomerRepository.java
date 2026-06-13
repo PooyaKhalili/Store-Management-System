@@ -44,6 +44,14 @@ public class CustomerRepository {
             System.out.println("CustomerRepository : File not found");
         }
     }
+    public void updateCustomerPurchaseStats(int customerId, long orderAmount) {
+        Customer customer = storage.get(customerId);
+        if (customer != null) {
+            customer.setBuyCount(customer.getBuyCount() + 1);
+            customer.setTotalPaid(customer.getTotalPaid() + orderAmount);
+            saveData();
+        }
+    }
     public void saveData(){
         File file = new File(filePath);
         try(Writer writer = new FileWriter(filePath)){
