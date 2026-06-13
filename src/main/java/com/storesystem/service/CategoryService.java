@@ -48,6 +48,6 @@ public class CategoryService {
 
     private void validateCategoryName(String name) {
         if (name == null || name.trim().isEmpty())
-            throw new IllegalArgumentException("Category name cannot be empty");
+            throw new IllegalArgumentException("اسم دسته بندی نباید خالی باشد");
     }
 }

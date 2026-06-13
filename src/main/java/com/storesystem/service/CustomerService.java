@@ -15,7 +15,7 @@ public class CustomerService {
 
     public Customer createCustomer(String firstName, String lastName, String phoneNumber) {
         validateCustomer(firstName, lastName, phoneNumber);
-        Customer customer = new Customer(firstName, lastName, phoneNumber);
+        Customer customer = new Customer(firstName, lastName, phoneNumber, 0, 0);
         return customerRepository.addCustomer(customer);
     }
 

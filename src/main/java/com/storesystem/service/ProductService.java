@@ -13,13 +13,13 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product createProduct(String name, double price, int stock, int categoryId) {
+    public Product createProduct(String name, long price, int stock, int categoryId) {
         validateProduct(name, price, stock, categoryId);
         Product product = new Product(name, (long) price, stock, categoryId);
         return productRepository.addProduct(product);
     }
 
-    public void updateProduct(long code, String name, double price, int stock, int categoryId) {
+    public void updateProduct(long code, String name, long price, int stock, int categoryId) {
         Product product = productRepository.searchProductByCode(code);
         if (product == null)
             throw new IllegalArgumentException("Product not found");
@@ -68,7 +68,7 @@ public class ProductService {
         return productRepository.lowStockProducts();
     }
 
-    private void validateProduct(String name, double price, int stock, int categoryId) {
+    private void validateProduct(String name, long price, int stock, int categoryId) {
         if (name == null || name.trim().isEmpty())
             throw new IllegalArgumentException("Product name cannot be empty");
         if (price <= 0)

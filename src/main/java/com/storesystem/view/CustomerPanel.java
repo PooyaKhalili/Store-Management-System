@@ -207,7 +207,7 @@ public class CustomerPanel extends JPanel {
             }
             
         });
-editButton.addActionListener(e -> {
+        editButton.addActionListener(e -> {
             JTable table = TableUtil.getTableFromPanel(CustomerTable);
             if (table == null) return;
 
@@ -307,6 +307,7 @@ editButton.addActionListener(e -> {
             }   
         });
         refreshButton.addActionListener(e -> {
+            searchField.setText("");
             TableUtil.refreshTable(CustomerTable, controller.getAllCustomers());
         });
         searchField.addActionListener(e -> {

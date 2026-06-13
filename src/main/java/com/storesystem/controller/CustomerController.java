@@ -36,7 +36,7 @@ public class CustomerController {
         List<Customer> customers = customerService.getAllCustomers();
         List<Object[]> data = new ArrayList<>();
         for(Customer customer : customers){
-            Object[] row = {customer.getId(), customer.getFirstName() + " " + customer.getLastName(), customer.getPhoneNumber()};
+            Object[] row = {customer.getId(), customer.getFirstName() + " " + customer.getLastName(), customer.getPhoneNumber(),customer.getBuyCount(),customer.getTotalPaid(),customer.getRegisteredDate()};
             data.add(row);
         }
         return data;

@@ -9,7 +9,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,7 +17,9 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import com.storesystem.config.SetupUI;
+import com.storesystem.util.JalaliDatePickerDialog;
 import com.storesystem.util.TableUtil;
+import java.awt.Window;
 
 public class HistoryPanel extends JPanel {
 
@@ -166,6 +167,44 @@ public class HistoryPanel extends JPanel {
     }
 
     private void addActionListeners() {
+        btnDeleteAll.addActionListener(e -> {
         
+        });
+        btnDeleteSelected.addActionListener(e -> {
+        
+        });
+        btnPrintReceipt.addActionListener(e -> {
+        
+        });
+        btnExportPDF.addActionListener(e -> {
+        
+        });
+        btnRefresh.addActionListener(e -> {
+        
+        });
+        btnStartDate.addActionListener(e -> {
+            Window window = SwingUtilities.getWindowAncestor(btnStartDate);
+            JalaliDatePickerDialog picker = new JalaliDatePickerDialog(window, "انتخاب تاریخ و ساعت شروع");
+            picker.setVisible(true);
+            if (picker.getSelectedDate() != null) {
+            btnStartDate.setText(picker.getSelectedDate());
+            }
+        });
+        btnEndDate.addActionListener(e -> {
+            Window window = SwingUtilities.getWindowAncestor(btnStartDate);
+            JalaliDatePickerDialog picker = new JalaliDatePickerDialog(window, "انتخاب تاریخ و ساعت پایان");
+            picker.setVisible(true);
+            if (picker.getSelectedDate() != null) {
+            btnEndDate.setText(picker.getSelectedDate());
+            }
+        
+        });
+        btnResetFilters.addActionListener(e -> {
+        });
+        searchField.addActionListener(e -> {
+        
+        });
+
     }
+
 }

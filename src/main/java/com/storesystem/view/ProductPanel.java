@@ -2,10 +2,15 @@ package com.storesystem.view;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import com.storesystem.util.TableUtil;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import com.storesystem.config.SetupUI;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
@@ -15,15 +20,14 @@ import java.awt.GridLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
-
+import com.storesystem.controller.ProductController;
 import javax.swing.BorderFactory;
 import java.awt.Font;
 
 
 public class ProductPanel extends JPanel {
 
-    private JPanel productTable;
+    public JPanel productTable;
 
     private JButton addButton;
     private JButton deleteButton;
@@ -36,12 +40,15 @@ public class ProductPanel extends JPanel {
 
     private JLabel categoryLabel;
     private JLabel searchLabel;
-    private JComboBox<String> comboBox;
+    public JComboBox<String> comboBox;
     private JTextField searchField;
     private JPanel searchPanel;
 
+    private final ProductController controller;
+
 
     public ProductPanel() {
+        controller = new ProductController(this);
         initComponents();
         createButtonPanel();
         creatSearchPanel();
@@ -50,7 +57,7 @@ public class ProductPanel extends JPanel {
 
     private void initComponents() {
         productTable = new JPanel();
-        productTable=TableUtil.createTable(new ArrayList<>(),
+        productTable=TableUtil.createTable(controller.getAllProducts(),
                 new String[] {"کد کالا", "نام کالا", "قیمت", "موجودی", "دسته‌بندی"},
                 new int[] {90, 350, 130, 90, 180});
         buttonPanel = new JPanel();
@@ -61,7 +68,10 @@ public class ProductPanel extends JPanel {
         categoryLabel.setFont(new Font("Vazir", Font.BOLD, 14));
         searchLabel = new JLabel("جست‌وجو:");
         searchLabel.setFont(new Font("Vazir", Font.BOLD, 14));
-        comboBox = new JComboBox<String>(new String[] {"همه"});
+        comboBox = new JComboBox<>();
+        controller.loadCategoriesIntoComboBox();
+        comboBox.setFont(new Font("Vazir", Font.BOLD, 14));
+
 
         addButton = SetupUI.createButton(new Color(65, 115, 242),"افزودن +");
         editButton = SetupUI.createButton(new Color(251, 179, 22),"ویرایش ✏️");
@@ -130,27 +140,274 @@ public class ProductPanel extends JPanel {
         addActionListeners();
     }
 
-    private void addActionListeners() {
+private void addActionListeners() {
+        Font vazirFont = new Font("Vazir", Font.PLAIN, 14);
+
+        // ==========================================
+        // ۱. دکمه افزودن کالا
+        // ==========================================
         addButton.addActionListener(e -> {
+            JTextField nameField = new JTextField();
+            JTextField priceField = new JTextField();
+            JTextField stockField = new JTextField();
             
+            // گرفتن لیست دسته‌بندی‌ها از منوی کشویی اصلی برای نمایش در پاپ‌آپ (بدون گزینه "همه")
+            JComboBox<String> categoryCombo = new JComboBox<>();
+            for (int i = 1; i < comboBox.getItemCount(); i++) {
+                categoryCombo.addItem(comboBox.getItemAt(i));
+            }
+            // اگر منوی اصلی خالی بود، یک فیلد متنی پیش‌فرض قرار می‌دهیم تا ارور ندهد
+            if (categoryCombo.getItemCount() == 0) {
+                categoryCombo.addItem("نامشخص");
+            }
+
+            nameField.setFont(vazirFont); priceField.setFont(vazirFont); 
+            stockField.setFont(vazirFont); categoryCombo.setFont(vazirFont);
+            
+            nameField.setHorizontalAlignment(JTextField.RIGHT);
+            priceField.setHorizontalAlignment(JTextField.RIGHT);
+            stockField.setHorizontalAlignment(JTextField.RIGHT);
+
+            JLabel nameLabel = new JLabel("نام کالا:");
+            JLabel priceLabel = new JLabel("قیمت (ریال):");
+            JLabel stockLabel = new JLabel("موجودی:");
+            JLabel catLabel = new JLabel("دسته‌بندی:");
+            
+            nameLabel.setFont(vazirFont); priceLabel.setFont(vazirFont); 
+            stockLabel.setFont(vazirFont); catLabel.setFont(vazirFont);
+            
+            nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            priceLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            stockLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            catLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
+            JPanel inputPanel = new JPanel();
+            inputPanel.setLayout(new GridLayout(4, 2, 10, 10)); 
+            inputPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
+            inputPanel.add(nameLabel); inputPanel.add(nameField);
+            inputPanel.add(priceLabel); inputPanel.add(priceField);
+            inputPanel.add(stockLabel); inputPanel.add(stockField);
+            inputPanel.add(catLabel); inputPanel.add(categoryCombo);
+
+            UIManager.put("Button.font", vazirFont);
+            Object[] customButtons = {"ثبت کالا", "انصراف"};
+
+            JOptionPane optionPane = new JOptionPane(
+                    inputPanel, 
+                    JOptionPane.PLAIN_MESSAGE, 
+                    JOptionPane.OK_CANCEL_OPTION, 
+                    null, 
+                    customButtons, 
+                    customButtons[0]
+            );
+            
+            optionPane.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            javax.swing.JDialog dialog = optionPane.createDialog(this, "افزودن کالای جدید 📦");
+            dialog.setVisible(true);
+
+            Object result = optionPane.getValue();
+            if (result != null && result.equals("ثبت کالا")) {
+                String name = nameField.getText().trim();
+                String price = priceField.getText().trim();
+                String stock = stockField.getText().trim();
+                String category = categoryCombo.getSelectedItem().toString();
+                String message = "";
+
+                if (controller != null) {
+                    message = controller.addProduct(name, price, stock, category); 
+                }
+
+                UIManager.put("OptionPane.messageFont", vazirFont);
+                if (!message.equals("کالا با موفقیت اضافه شد")) {
+                    JOptionPane.showMessageDialog(this, message, "خطا", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, message, "عملیات موفق", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
         });
+
+        // ==========================================
+        // ۲. دکمه ویرایش کالا
+        // ==========================================
         editButton.addActionListener(e -> {
+            javax.swing.JTable tableInstance = TableUtil.getTableFromPanel(productTable);
+            if (tableInstance == null) return;
+
+            int selectedRow = tableInstance.getSelectedRow();
+            if (selectedRow == -1) {
+                UIManager.put("OptionPane.messageFont", vazirFont);
+                JOptionPane.showMessageDialog(this, 
+                        "لطفاً ابتدا یک کالا را از جدول انتخاب کنید!", 
+                        "خطا", 
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // استخراج اطلاعات ردیف انتخاب شده برای پر کردن اولیه فیلدها
+            String codeStr = tableInstance.getValueAt(selectedRow, 0).toString();
+            String oldName = tableInstance.getValueAt(selectedRow, 1).toString();
+            String oldPrice = tableInstance.getValueAt(selectedRow, 2).toString();
+            String oldStock = tableInstance.getValueAt(selectedRow, 3).toString();
+            String oldCategory = tableInstance.getValueAt(selectedRow, 4).toString();
+
+            JTextField nameField = new JTextField(oldName);
+            JTextField priceField = new JTextField(oldPrice);
+            JTextField stockField = new JTextField(oldStock);
             
+            JComboBox<String> categoryCombo = new JComboBox<>();
+            for (int i = 1; i < comboBox.getItemCount(); i++) {
+                categoryCombo.addItem(comboBox.getItemAt(i));
+            }
+            if (categoryCombo.getItemCount() == 0) categoryCombo.addItem(oldCategory);
+            categoryCombo.setSelectedItem(oldCategory);
+
+            nameField.setFont(vazirFont); priceField.setFont(vazirFont); 
+            stockField.setFont(vazirFont); categoryCombo.setFont(vazirFont);
+            
+            nameField.setHorizontalAlignment(JTextField.RIGHT);
+            priceField.setHorizontalAlignment(JTextField.RIGHT);
+            stockField.setHorizontalAlignment(JTextField.RIGHT);
+
+            JLabel nameLabel = new JLabel("نام جدید کالا:");
+            JLabel priceLabel = new JLabel("قیمت جدید (ریال):");
+            JLabel stockLabel = new JLabel("موجودی جدید:");
+            JLabel catLabel = new JLabel("دسته‌بندی جدید:");
+
+            nameLabel.setFont(vazirFont); priceLabel.setFont(vazirFont); 
+            stockLabel.setFont(vazirFont); catLabel.setFont(vazirFont);
+            
+            nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            priceLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            stockLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            catLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
+            JPanel inputPanel = new JPanel();
+            inputPanel.setLayout(new GridLayout(4, 2, 10, 10)); 
+            inputPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
+            inputPanel.add(nameLabel); inputPanel.add(nameField);
+            inputPanel.add(priceLabel); inputPanel.add(priceField);
+            inputPanel.add(stockLabel); inputPanel.add(stockField);
+            inputPanel.add(catLabel); inputPanel.add(categoryCombo);
+
+            UIManager.put("Button.font", vazirFont);
+            Object[] customButtons = {"ویرایش کالا", "انصراف"};
+
+            JOptionPane optionPane = new JOptionPane(
+                    inputPanel, 
+                    JOptionPane.PLAIN_MESSAGE, 
+                    JOptionPane.OK_CANCEL_OPTION, 
+                    null, 
+                    customButtons, 
+                    customButtons[0]
+            );
+            
+            optionPane.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            javax.swing.JDialog dialog = optionPane.createDialog(this, "ویرایش کالا ✏️");
+            dialog.setVisible(true);
+
+            Object result = optionPane.getValue();
+            if (result != null && result.equals("ویرایش کالا")) {
+                String name = nameField.getText().trim();
+                String price = priceField.getText().trim();
+                String stock = stockField.getText().trim();
+                String category = categoryCombo.getSelectedItem().toString();
+                String message = "";
+                
+                if (controller != null) {
+                    message = controller.editProduct(Long.parseLong(codeStr), name, price, stock, category); 
+                }
+
+                UIManager.put("OptionPane.messageFont", vazirFont);
+                if (!message.equals("کالا با موفقیت ویرایش شد")) {
+                    JOptionPane.showMessageDialog(this, message, "خطا", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, message, "عملیات موفق", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
         });
+
+        // ==========================================
+        // ۳. دکمه حذف کالا
+        // ==========================================
         deleteButton.addActionListener(e -> {
-            
+            javax.swing.JTable tableInstance = TableUtil.getTableFromPanel(productTable);
+            if (tableInstance != null) {
+                int selectedRow = tableInstance.getSelectedRow();
+
+                if (selectedRow == -1) {
+                    UIManager.put("OptionPane.messageFont", vazirFont);
+                    JOptionPane.showMessageDialog(this, 
+                            "لطفاً ابتدا یک کالا را از جدول انتخاب کنید!", 
+                            "خطا", 
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                String codeStr = tableInstance.getValueAt(selectedRow, 0).toString();
+                String name = tableInstance.getValueAt(selectedRow, 1).toString();
+                
+                UIManager.put("OptionPane.messageFont", vazirFont);
+                UIManager.put("Button.font", vazirFont);
+                if (JOptionPane.showConfirmDialog(this, "آیا از حذف کالای «" + name + "» اطمینان دارید؟", "حذف کالا", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    if (controller != null) {
+                        controller.deleteProduct(Long.parseLong(codeStr));
+                    }
+                }
+            }   
         });
+
+        // ==========================================
+        // ۴. دکمه بروزرسانی جدول
+        // ==========================================
         refreshButton.addActionListener(e -> {
-            
+            if (controller != null) {
+                searchField.setText(""); // پاک کردن متن سرچ
+                controller.loadCategoriesIntoComboBox(); // لود مجدد و یک‌باره دسته‌بندی‌ها
+                TableUtil.refreshTable(productTable, controller.getAllProducts()); // آپدیت جدول کالاها
+            }
         });
+
+        // ==========================================
+        // ۵. دکمه گزارش کمبود موجودی
+        // ==========================================
         lowStockButton.addActionListener(e -> {
-            
+            if (controller != null) {
+                controller.showLowStockProducts();
+            }
         });
+
+        // ==========================================
+        // ۶. جستجو (تغییر در تکست فیلد و کومبوباکس)
+        // ==========================================
+        searchField.addActionListener(e -> {
+            if (controller != null) {
+                String text = searchField.getText().trim();
+                String category = comboBox.getSelectedItem().toString();
+                controller.searchProduct(text, category);
+            }
+        });
+
+        comboBox.addActionListener(e -> {
+            if (controller != null) {
+                String text = searchField.getText().trim();
+                String category = comboBox.getSelectedItem().toString();
+                controller.searchProduct(text, category);
+            }
+        });
+
+        // ==========================================
+        // ۷. ورود و خروج CSV (پلیس‌هولدر تا زمان نوشتن متدها)
+        // ==========================================
         importCSV.addActionListener(e -> {
-            
+            UIManager.put("OptionPane.messageFont", vazirFont);
+            JOptionPane.showMessageDialog(this, "این قابلیت به زودی در دسترس خواهد بود.", "اطلاعیه", JOptionPane.INFORMATION_MESSAGE);
         });
+
         exportCSV.addActionListener(e -> {
-            
+            UIManager.put("OptionPane.messageFont", vazirFont);
+            JOptionPane.showMessageDialog(this, "این قابلیت به زودی در دسترس خواهد بود.", "اطلاعیه", JOptionPane.INFORMATION_MESSAGE);
         });
     }
 
