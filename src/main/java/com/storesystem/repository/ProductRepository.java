@@ -8,7 +8,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 public class ProductRepository {
-    private final String filePath = "data/Products.json";
+    private final String filePath = "src\\data\\Products.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<Long, Product> storage = new HashMap<>();
     private Set<Long>usedCodes = new HashSet<>();
@@ -136,4 +136,3 @@ public class ProductRepository {
         return foundProducts;
     }
 }
-
