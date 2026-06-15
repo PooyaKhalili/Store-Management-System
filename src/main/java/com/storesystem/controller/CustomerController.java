@@ -19,7 +19,7 @@ public class CustomerController {
 
     public String addCustomer(String firstName, String lastName, String phoneNumber){
         for(Customer customer:customerService.searchByPhone(phoneNumber)){
-            if (phoneNumber==customer.getPhoneNumber()) {
+            if (phoneNumber.equals(customer.getPhoneNumber())) {
                 return "مشتری با این شماره تلفن قبلا ثبت شده است";
             }
         }

@@ -32,8 +32,13 @@ public class ProductController {
             int categoryId = getCategoryIdByName(categoryName);
 
             for(Product product : productService.getAllProducts()){
-                if (name.equals(product.getName())) {
+                if (name.equals(product.getName()) && !(price == product.getPrice())) {
                     return "کالا با این نام قبلا ثبت شده است";
+                }
+                else if(name.equals(product.getName()) && (price == product.getPrice())) {
+                    productService.updateProduct(product.getCode(), product.getName(), product.getPrice(), product.getStock()+stock, product.getCategoryId());
+                    TableUtil.refreshTable(productPanel.productTable, this.getAllProducts());
+                    return "کالای مورد نظر از قبل موجود بوده و  موجودی جدید به لیست اضافه شد";
                 }
             }
 
