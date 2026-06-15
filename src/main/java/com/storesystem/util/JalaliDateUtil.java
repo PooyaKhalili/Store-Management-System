@@ -1,4 +1,7 @@
 package com.storesystem.util;
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.PersianCalendar;
+import java.util.Date;
 
 public class JalaliDateUtil {
 
@@ -41,46 +44,19 @@ public class JalaliDateUtil {
     }
 
     public static String getCurrentJalaliDateTime() {
-        java.time.LocalDateTime now = java.time.LocalDateTime.now();
-        int gYear = now.getYear();
-        int gMonth = now.getMonthValue();
-        int gDay = now.getDayOfMonth();
-        int hour = now.getHour();
-        int minute = now.getMinute();
+        Date currentDate = new Date();
 
-        int gy = gYear - 1600;
-        int gm = gMonth - 1;
-        int gd = gDay - 1;
+        PersianCalendar jalaliCalendar = new PersianCalendar();
+        jalaliCalendar.setTime(currentDate);
 
-        int g_day_no = 365 * gy + (gy + 4) / 4 - (gy + 100) / 100 + (gy + 400) / 400;
-        int[] g_days_in_ctrl = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        for (int i = 0; i < gm; ++i) g_day_no += g_days_in_ctrl[i + 1];
-        if (gm > 1 && ((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0))) g_day_no++;
-        g_day_no += gd;
+        int year = jalaliCalendar.get(Calendar.YEAR);
+        int month = jalaliCalendar.get(Calendar.MONTH) + 1;
+        int day = jalaliCalendar.get(Calendar.DAY_OF_MONTH);
+        int hour = jalaliCalendar.get(Calendar.HOUR_OF_DAY);
+        int minute = jalaliCalendar.get(Calendar.MINUTE);
 
-        int j_day_no = g_day_no - 79;
-        int j_np = j_day_no / 12053;
-        j_day_no %= 12053;
 
-        int jy = 979 + 33 * j_np + 4 * (j_day_no / 1461);
-        j_day_no %= 1461;
+        return String.format("%04d/%02d/%02d %02d:%02d", year, month, day, hour, minute);
 
-        if (j_day_no >= 366) {
-            jy += (j_day_no - 1) / 365;
-            j_day_no = (j_day_no - 1) % 365;
-        }
-
-        int[] j_days_in_ctrl = {0, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29};
-        int jm = 0;
-        for (int i = 0; i < 12; ++i) {
-            if (j_day_no < j_days_in_ctrl[i + 1]) {
-                jm = i + 1;
-                break;
-            }
-            j_day_no -= j_days_in_ctrl[i + 1];
-        }
-        int jd = j_day_no + 1;
-
-        return String.format("%04d/%02d/%02d %02d:%02d", jy, jm, jd, hour, minute);
     }
 }
