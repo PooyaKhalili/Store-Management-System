@@ -6,9 +6,11 @@ import com.storesystem.repository.ProductRepository;
 import com.storesystem.repository.CategoryRepository;
 import com.storesystem.service.ProductService;
 import com.storesystem.service.CategoryService;
+import com.storesystem.util.CsvUtil;
 import com.storesystem.util.TableUtil;
 import com.storesystem.view.ProductPanel;
 import javax.swing.DefaultComboBoxModel;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -234,5 +236,53 @@ public class ProductController {
         } catch (Exception e) {
             return "نامشخص";
         }
+    }
+    public String exportToCsv(String filePath) {
+        try {
+            List<Product> allProducts = productService.getAllProducts();
+            if (allProducts.isEmpty()) {return "هیچ محصولی برای خروجی گرفتن وجود ندارد!";}
+            List<String[]> data = new ArrayList<>();
+            for (Product product : allProducts) {
+                String[] row = {
+                        String.valueOf(product.getCode()),
+                        product.getName(),
+                        String.valueOf(product.getPrice()),
+                        String.valueOf(product.getStock()),
+                        getCategoryNameById(product.getCategoryId())
+                };
+                data.add(row);
+            }
+            CsvUtil.writeCsvFile(filePath, data);
+            return "عملیات خروجی گرفتن از فایل CSV با موفقیت انجام شد!";
+        }catch (Exception e){
+            return "خطا در هنگام اجرای عملیات";
+        }
+    }
+    public String importFromCsv(String filePath) {
+        try {
+            List<String[]> importData = CsvUtil.readCsvFile(filePath);
+            if (importData.isEmpty()) {
+                return "فایل CSV خالی است!";
+            }
+
+            for (String[] row : importData) {
+                if (row.length >= 5) {
+                    String name = row[1];
+                    String price = row[2];
+                    String stock = row[3];
+                    String category = row[4];
+
+                    String result = addProduct(name, price, stock, category);
+                }
+            }
+            TableUtil.refreshTable(productPanel.productTable, getAllProducts());
+            loadCategoriesIntoComboBox();
+
+        } catch (FileNotFoundException e) {
+            return "فایل موردنظر برای گرفتن ورودی یافت نشد";
+        }catch (Exception e){
+            return "خطا در هنگام خواندن فایل";
+        }
+        return "عملیات ورودی گرفتن از فایل CSV با موفقیت انجام شد";
     }
 }
