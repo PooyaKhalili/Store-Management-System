@@ -56,4 +56,15 @@ public class OrderService {
         if (items == null || items.isEmpty())
             throw new IllegalArgumentException("Order must contain at least one item");
     }
+    public List<Order> getOrdersByDateRange(String startDate, String endDate) {
+        return orderRepository.findOrdersByDateRange(startDate, endDate);
+    }
+
+    public List<Order> getOrdersByDate(String date) {
+        return orderRepository.findOrdersByDate(date);
+    }
+
+    public void deleteAllOrders() {
+        orderRepository.deleteAllOrders();
+    }
 }
