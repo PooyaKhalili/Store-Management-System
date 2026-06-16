@@ -217,7 +217,7 @@ public class CustomerPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, 
                         "لطفاً ابتدا یک مشتری را از جدول انتخاب کنید!", 
                         "خطا", 
-                        JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -300,7 +300,7 @@ public class CustomerPanel extends JPanel {
                     JOptionPane.showMessageDialog(this, 
                             "لطفاً ابتدا یک مشتری را از جدول انتخاب کنید!", 
                             "خطا", 
-                            JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 String customerId = table.getValueAt(selectedRow, 0).toString();

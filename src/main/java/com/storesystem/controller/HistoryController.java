@@ -2,23 +2,18 @@ package com.storesystem.controller;
 
 import com.storesystem.model.Order;
 import com.storesystem.model.OrderItem;
-import com.storesystem.repository.OrderRepository;
-import com.storesystem.repository.CustomerRepository;
-import com.storesystem.service.OrderService;
 import com.storesystem.view.HistoryPanel;
 import java.util.List;
 import java.util.ArrayList;
 import java.text.DecimalFormat;
 public class HistoryController  {
-    private final OrderService orderService;
     private final HistoryPanel historyPanel;
     private final DecimalFormat priceFormatter = new DecimalFormat("###,###,###");
     public HistoryController(HistoryPanel historyPanel) {
         this.historyPanel = historyPanel;
-        this.orderService = new OrderService(new OrderRepository(),  new CustomerRepository());
     }
     public List<Object[]> getAllOrders(){
-        List<Order> orders = orderService.getAllOrders();
+        List<Order> orders = OrderController.orderService.getAllOrders();
         List<Object[]> list = new ArrayList<>();
         for(Order order : orders){
             Object[]row  = {
@@ -37,7 +32,7 @@ public class HistoryController  {
     }
     public String deleteOrder(int orderId){
         try {
-            orderService.deleteOrder(orderId);
+            OrderController.orderService.deleteOrder(orderId);
             return "سفارش با موفقیت حذف شد";
         }catch(Exception e){
             return "خطا: " + e.getMessage();
@@ -46,7 +41,7 @@ public class HistoryController  {
     }
     public String deleteAllOrders() {
         try {
-            orderService.deleteAllOrders();
+            OrderController.orderService.deleteAllOrders();
             return "تمامی سفارش ها با موفقیت حذف شدند";
         } catch (Exception e) {
             return "خطا: " + e.getMessage();
@@ -54,7 +49,7 @@ public class HistoryController  {
     }
     public List<Object[]> getOrderItems(long orderId) {
         try {
-            Order order = orderService.getOrderById(orderId);
+            Order order = OrderController.orderService.getOrderById(orderId);
             List<Object[]> list = new ArrayList<>();
             if (order != null && order.getOrderItems() != null) {
                 for (OrderItem item : order.getOrderItems()) {
@@ -75,11 +70,11 @@ public class HistoryController  {
     public List<Object[]> searchByDateRange(String startDate, String endDate) {
         List<Order> orders;
         if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
-            orders = orderService.getOrdersByDateRange(startDate, endDate);
+            orders = OrderController.orderService.getOrdersByDateRange(startDate, endDate);
         } else if (startDate != null && !startDate.isEmpty()) {
-            orders = orderService.getOrdersByDate(startDate);
+            orders = OrderController.orderService.getOrdersByDate(startDate);
         } else {
-            orders = orderService.getAllOrders();
+            orders = OrderController.orderService.getAllOrders();
         }
         return convertToTableData(orders);
     }
@@ -92,7 +87,7 @@ public class HistoryController  {
 
         try {
             long orderId = Long.parseLong(searchText.trim());
-            Order order = orderService.getOrderById(orderId);
+            Order order = OrderController.orderService.getOrderById(orderId);
             if (order != null) {
                 results.add(order);
             }
@@ -102,7 +97,7 @@ public class HistoryController  {
 
         try {
             long customerId = Long.parseLong(searchText.trim());
-            List<Order> customerOrders = orderService.getOrdersByCustomerId(customerId);
+            List<Order> customerOrders = OrderController.orderService.getOrdersByCustomerId(customerId);
             results.addAll(customerOrders);
         } catch (NumberFormatException e) {
             //search by CustomerId

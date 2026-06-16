@@ -4,13 +4,8 @@ import com.storesystem.model.Product;
 import com.storesystem.model.Customer;
 import com.storesystem.model.Category;
 import com.storesystem.model.OrderItem;
-import com.storesystem.repository.ProductRepository;
 import com.storesystem.repository.CustomerRepository;
-import com.storesystem.repository.CategoryRepository;
 import com.storesystem.repository.OrderRepository;
-import com.storesystem.service.ProductService;
-import com.storesystem.service.CustomerService;
-import com.storesystem.service.CategoryService;
 import com.storesystem.service.OrderService;
 import com.storesystem.util.TableUtil;
 import com.storesystem.view.OrderPanel;
@@ -24,11 +19,7 @@ import static com.storesystem.util.JalaliDateUtil.getCurrentJalaliDateTime;
 
 public class OrderController {
 
-    private final ProductService productService = new ProductService(new ProductRepository());
-    private final CustomerService customerService = new CustomerService(new CustomerRepository());
-    private final CategoryService categoryService = new CategoryService(new CategoryRepository());
-    private final OrderService orderService = new OrderService(new OrderRepository(), new CustomerRepository());
-    
+    static final OrderService orderService = new OrderService(new OrderRepository(), new CustomerRepository());
     private final OrderPanel orderPanel;
     private final DecimalFormat priceFormatter = new DecimalFormat("#,###");
 
@@ -60,7 +51,7 @@ public class OrderController {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             model.addElement("مشتری عمومی"); 
 
-            List<Customer> customers = customerService.getAllCustomers();
+            List<Customer> customers = CustomerController.customerService.getAllCustomers();
             if (customers != null) {
                 for (Customer customer : customers) {
                     model.addElement(customer.getId() + " - " + customer.getFirstName() + " " + customer.getLastName() + " - " + customer.getPhoneNumber());
@@ -79,9 +70,9 @@ public class OrderController {
 
             List<Customer> customers = new ArrayList<>();
             if (text != null && !text.trim().isEmpty()) {
-                if (customerService.searchByFirstName(text) != null) customers.addAll(customerService.searchByFirstName(text));
-                if (customerService.searchByLastName(text) != null) customers.addAll(customerService.searchByLastName(text));
-                if (customerService.searchByPhone(text) != null) customers.addAll(customerService.searchByPhone(text));
+                if (CustomerController.customerService.searchByFirstName(text) != null) customers.addAll(CustomerController.customerService.searchByFirstName(text));
+                if (CustomerController.customerService.searchByLastName(text) != null) customers.addAll(CustomerController.customerService.searchByLastName(text));
+                if (CustomerController.customerService.searchByPhone(text) != null) customers.addAll(CustomerController.customerService.searchByPhone(text));
                 
                 List<Customer> unique = new ArrayList<>();
                 for (Customer c : customers) {
@@ -108,7 +99,7 @@ public class OrderController {
         try {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             model.addElement("همه");
-            List<Category> categories = categoryService.getAllCategories();
+            List<Category> categories = CategoryController.categoryService.getAllCategories();
             if (categories != null) {
                 for (Category category : categories) {
                     model.addElement(category.getName());
@@ -125,10 +116,10 @@ public class OrderController {
 
         if (text != null && !text.trim().isEmpty()) {
             List<Product> allResults = new ArrayList<>();
-            if (productService.searchProductsByName(text) != null) allResults.addAll(productService.searchProductsByName(text));
+            if (ProductController.productService.searchProductsByName(text) != null) allResults.addAll(ProductController.productService.searchProductsByName(text));
             try {
                 long code = Long.parseLong(text.trim());
-                Product productByCode = productService.getProductByCode(code);
+                Product productByCode = ProductController.productService.getProductByCode(code);
                 if (productByCode != null) allResults.add(productByCode);
             } catch (Exception e) {}
 
@@ -140,8 +131,8 @@ public class OrderController {
                 if (!isDuplicate) uniqueProducts.add(currentProduct);
             }
         } else {
-            if (productService.getAllProducts() != null) {
-                uniqueProducts.addAll(productService.getAllProducts());
+            if (ProductController.productService.getAllProducts() != null) {
+                uniqueProducts.addAll(ProductController.productService.getAllProducts());
             }
         }
 
@@ -172,7 +163,7 @@ public class OrderController {
         if (quantity <= 0) return "تعداد باید بیشتر از صفر باشد!";
         
         try {
-            Product product = productService.getProductByCode(productCode);
+            Product product = ProductController.productService.getProductByCode(productCode);
             if (product == null) return "کالا یافت نشد!";
 
             CartItem existingItem = null;
@@ -185,7 +176,7 @@ public class OrderController {
 
             int totalRequestedQuantity = quantity + (existingItem != null ? existingItem.quantity : 0);
 
-            if (!productService.hasSufficientStock(productCode, totalRequestedQuantity)) {
+            if (!ProductController.productService.hasSufficientStock(productCode, totalRequestedQuantity)) {
                 return "موجودی انبار کافی نیست! (موجودی فعلی: " + product.getStock() + ")";
             }
 
@@ -207,7 +198,7 @@ public class OrderController {
         if (newQuantity <= 0) return "تعداد باید بیشتر از صفر باشد!";
 
         try {
-            if (!productService.hasSufficientStock(productCode, newQuantity)) {
+            if (!ProductController.productService.hasSufficientStock(productCode, newQuantity)) {
                 return "موجودی انبار کافی نیست!";
             }
 
@@ -289,7 +280,7 @@ public class OrderController {
             String orderDate = getCurrentJalaliDateTime();
 
             for (CartItem item : currentCart) {
-                productService.reduceStock(item.product.getCode(), item.quantity);
+                ProductController.productService.reduceStock(item.product.getCode(), item.quantity);
             }
 
             orderService.createOrder(customerId, orderDate, orderItems);
@@ -308,7 +299,7 @@ public class OrderController {
 
     private int getCategoryIdByName(String name) {
         try {
-            for (Category category : categoryService.getAllCategories()) {
+            for (Category category : CategoryController.categoryService.getAllCategories()) {
                 if (category.getName().equals(name)) return category.getId();
             }
         } catch (Exception e) {}
@@ -317,7 +308,7 @@ public class OrderController {
 
     private String getCategoryNameById(int id) {
         try {
-            Category category = categoryService.getCategoryById(id);
+            Category category = CategoryController.categoryService.getCategoryById(id);
             if (category != null) return category.getName();
         } catch (Exception e) {}
         return "نامشخص";

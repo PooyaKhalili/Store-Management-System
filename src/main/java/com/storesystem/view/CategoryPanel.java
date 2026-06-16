@@ -145,7 +145,7 @@ private void addActionListeners() {
                 JOptionPane.showMessageDialog(this, 
                         "لطفاً ابتدا یک دسته‌بندی را از جدول انتخاب کنید!", 
                         "خطا", 
-                        JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -213,7 +213,7 @@ private void addActionListeners() {
                     JOptionPane.showMessageDialog(this, 
                             "لطفاً ابتدا یک دسته‌بندی را از جدول انتخاب کنید!", 
                             "خطا", 
-                            JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 

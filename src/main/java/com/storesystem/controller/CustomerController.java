@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class CustomerController {
 
-    private final CustomerService customerService= new CustomerService(new CustomerRepository());
+    static final CustomerService customerService= new CustomerService(new CustomerRepository());
     private final CustomerPanel customerPanel;
 
     public CustomerController(CustomerPanel customerPanel) {

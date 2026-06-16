@@ -1,8 +1,8 @@
 package com.storesystem.view;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -26,6 +26,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import com.storesystem.controller.ProductController;
+import javax.swing.JFileChooser;
 
 import java.awt.Font;
 import java.io.File;
@@ -244,7 +245,7 @@ private void addActionListeners() {
                 JOptionPane.showMessageDialog(this, 
                         "لطفاً ابتدا یک کالا را از جدول انتخاب کنید!", 
                         "خطا", 
-                        JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -345,7 +346,7 @@ private void addActionListeners() {
                     JOptionPane.showMessageDialog(this, 
                             "لطفاً ابتدا یک کالا را از جدول انتخاب کنید!", 
                             "خطا", 
-                            JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 

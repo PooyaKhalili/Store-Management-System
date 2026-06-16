@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class CategoryController {
 
-    private final CategoryService categoryService = new CategoryService(new CategoryRepository());
+    static final CategoryService categoryService = new CategoryService(new CategoryRepository());
     private final CategoryPanel categoryPanel;
 
     public CategoryController(CategoryPanel categoryPanel) {

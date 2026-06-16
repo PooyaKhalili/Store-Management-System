@@ -294,7 +294,7 @@ private void creatSearchPanel() {
             int selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
                 UIManager.put("OptionPane.messageFont", vazirFont);
-                JOptionPane.showMessageDialog(this, "لطفاً ابتدا یک کالا را از لیست جستجو انتخاب کنید!", "خطا", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "لطفاً ابتدا یک کالا را از لیست جستجو انتخاب کنید!", "خطا", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -332,7 +332,7 @@ private void creatSearchPanel() {
             int selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
                 UIManager.put("OptionPane.messageFont", vazirFont);
-                JOptionPane.showMessageDialog(this, "لطفاً ابتدا یک کالا را از سبد خرید انتخاب کنید!", "خطا", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "لطفاً ابتدا یک کالا را از سبد خرید انتخاب کنید!", "خطا", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -371,7 +371,7 @@ private void creatSearchPanel() {
 
                 if (selectedRow == -1) {
                     UIManager.put("OptionPane.messageFont", vazirFont);
-                    JOptionPane.showMessageDialog(this, "لطفاً ابتدا یک کالا را از سبد خرید انتخاب کنید!", "خطا", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "لطفاً ابتدا یک کالا را از سبد خرید انتخاب کنید!", "خطا", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
