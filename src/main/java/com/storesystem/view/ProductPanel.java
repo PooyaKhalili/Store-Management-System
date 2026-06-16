@@ -1,5 +1,11 @@
 package com.storesystem.view;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
@@ -9,12 +15,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import com.storesystem.util.TableUtil;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import com.storesystem.config.SetupUI;
 import java.awt.Color;
@@ -26,8 +26,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import com.storesystem.controller.ProductController;
-import javax.swing.BorderFactory;
+
 import java.awt.Font;
+import java.io.File;
 
 
 public class ProductPanel extends JPanel {
@@ -393,12 +394,49 @@ private void addActionListeners() {
 
         importCSV.addActionListener(e -> {
             UIManager.put("OptionPane.messageFont", vazirFont);
-            JOptionPane.showMessageDialog(this, "این قابلیت به زودی در دسترس خواهد بود.", "اطلاعیه", JOptionPane.INFORMATION_MESSAGE);
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("انتخاب فایل CSV برای ورود");
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("CSV Files", "csv"));
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/Desktop"));
+            int result = fileChooser.showOpenDialog(this);
+            if(result == JFileChooser.APPROVE_OPTION){
+                File selectedFile = fileChooser.getSelectedFile();
+                String response = controller.importFromCsv(selectedFile.getAbsolutePath());
+                if (response.contains("خطا")) {
+                    JOptionPane.showMessageDialog(this, response, "خطا", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, response, "موفق", JOptionPane.INFORMATION_MESSAGE);
+                    controller.loadCategoriesIntoComboBox();
+                }
+            }
         });
 
         exportCSV.addActionListener(e -> {
             UIManager.put("OptionPane.messageFont", vazirFont);
-            JOptionPane.showMessageDialog(this, "این قابلیت به زودی در دسترس خواهد بود.", "اطلاعیه", JOptionPane.INFORMATION_MESSAGE);
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("ذخیره فایل CSV");
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("CSV Files", "csv"));
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/Desktop"));
+            fileChooser.setSelectedFile(new File("productsExport.csv"));
+
+            int result = fileChooser.showSaveDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                String filePath = selectedFile.getAbsolutePath();
+
+                if (!filePath.toLowerCase().endsWith(".csv")) {
+                    filePath += ".csv";
+                }
+
+                String response = controller.exportToCsv(filePath);
+
+                UIManager.put("OptionPane.messageFont", vazirFont);
+                if (response.contains("خطا")) {
+                    JOptionPane.showMessageDialog(this, response, "خطا", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, response, "موفق", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
         });
     }
 
