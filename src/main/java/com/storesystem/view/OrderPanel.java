@@ -39,7 +39,7 @@ public class OrderPanel extends JPanel {
 
     private JButton payButton;
     private JButton deleteButton;
-    private JButton refreshButton;
+    JButton refreshButton;
     private JButton editButton;
     private JPanel buttonPanel1;
 

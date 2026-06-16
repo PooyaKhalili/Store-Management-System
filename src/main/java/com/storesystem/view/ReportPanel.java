@@ -22,7 +22,7 @@ public class ReportPanel extends JPanel {
     private JPanel topTable;
     private JPanel bottomTable;
 
-    private JButton refreshButton;
+    JButton refreshButton;
     private JLabel totalRevenueLabel;
     private JLabel topTitleLabel;
     private JLabel bottomTitleLabel;

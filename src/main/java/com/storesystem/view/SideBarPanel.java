@@ -75,31 +75,37 @@ public class SideBarPanel extends JPanel {
     private void addActionListeners() {
         categoryButton.addActionListener(e -> {
             updateAllButtons(categoryButton);
+            categoryPanel.refreshButton.doClick();
             MainFrame.switchPanel(categoryPanel);
         });
         
         productButton.addActionListener(e -> {
             updateAllButtons(productButton);
+            productPanel.refreshButton.doClick();
             MainFrame.switchPanel(productPanel);
         });
         
         customerButton.addActionListener(e -> {
             updateAllButtons(customerButton);
+            customerPanel.refreshButton.doClick();
             MainFrame.switchPanel(customerPanel);
         });
         
         shoppingCartButton.addActionListener(e -> {
             updateAllButtons(shoppingCartButton);
+            orderPanel.refreshButton.doClick();
             MainFrame.switchPanel(orderPanel);
         });
         
         purchaseHistoryButton.addActionListener(e -> {
             updateAllButtons(purchaseHistoryButton);
+            historyPanel.btnRefresh.doClick();
             MainFrame.switchPanel(historyPanel);
         });
         
         reportButton.addActionListener(e -> {
             updateAllButtons(reportButton);
+            reportPanel.refreshButton.doClick();
             MainFrame.switchPanel(reportPanel);
         });
     }

@@ -28,7 +28,7 @@ public class CategoryPanel extends JPanel {
     private JButton addButton;
     private JButton editButton;
     private JButton deleteButton;
-    private JButton refreshButton;
+    JButton refreshButton;
 
     private final CategoryController controller;
 

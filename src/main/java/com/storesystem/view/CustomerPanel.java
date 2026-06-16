@@ -33,7 +33,7 @@ public class CustomerPanel extends JPanel {
 
     public JButton addButton;
     private JButton deleteButton;
-    private JButton refreshButton;
+    JButton refreshButton;
     private JButton editButton;
     private JPanel buttonPanel;
 

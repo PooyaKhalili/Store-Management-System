@@ -38,7 +38,7 @@ public class ProductPanel extends JPanel {
 
     private JButton addButton;
     private JButton deleteButton;
-    private JButton refreshButton;
+    JButton refreshButton;
     private JButton importCSV;
     private JButton exportCSV;
     private JButton editButton;
