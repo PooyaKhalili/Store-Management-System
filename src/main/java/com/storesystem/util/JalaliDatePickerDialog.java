@@ -20,6 +20,7 @@ public class JalaliDatePickerDialog extends JDialog {
 
     public JalaliDatePickerDialog(Window parent, String title) {
         super(parent, title, ModalityType.APPLICATION_MODAL);
+        setResizable(false);
         initComponents();
         pack();
         setLocationRelativeTo(parent);

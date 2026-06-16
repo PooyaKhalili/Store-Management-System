@@ -31,7 +31,7 @@ public class CustomerPanel extends JPanel {
 
     public JPanel CustomerTable;
 
-    private JButton addButton;
+    public JButton addButton;
     private JButton deleteButton;
     private JButton refreshButton;
     private JButton editButton;
@@ -226,8 +226,11 @@ public class CustomerPanel extends JPanel {
             Font vazirFont = new Font("Vazir", Font.PLAIN, 14);
 
             JTextField firstNameField = new JTextField();
+            firstNameField.setText(table.getValueAt(selectedRow, 1).toString().split(" ")[0].trim());
             JTextField lastNameField = new JTextField();
+            lastNameField.setText(table.getValueAt(selectedRow, 1).toString().split(" ")[1].trim());
             JTextField phoneField = new JTextField();
+            phoneField.setText(table.getValueAt(selectedRow, 2).toString().trim());
 
             firstNameField.setFont(vazirFont); lastNameField.setFont(vazirFont); phoneField.setFont(vazirFont);
             firstNameField.setHorizontalAlignment(JTextField.RIGHT);

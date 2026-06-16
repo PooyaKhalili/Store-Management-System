@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class OrderRepository {
-    private final String filePath = "data/Orders.json";
+    private final String filePath = "src\\data\\Orders.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<Long, Order> storage = new HashMap<>();
     private long nextOrderId = 1;

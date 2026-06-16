@@ -4,13 +4,13 @@
     "name": "موبایل",
     "price": 2000000000,
     "categoryId": 1,
-    "stock": 9
+    "stock": 0
   },
   {
     "code": 785362,
     "name": "چیپس",
     "price": 700000,
     "categoryId": 2,
-    "stock": 40
+    "stock": 35
   }
 ]

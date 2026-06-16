@@ -1,13 +1,18 @@
 package com.storesystem.view;
 
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import com.storesystem.util.TableUtil;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -146,7 +151,6 @@ private void addActionListeners() {
         addButton.addActionListener(e -> {
             JTextField nameField = new JTextField();
             JTextField priceField = new JTextField();
-            JTextField stockField = new JTextField();
             
             JComboBox<String> categoryCombo = new JComboBox<>();
             for (int i = 1; i < comboBox.getItemCount(); i++) {
@@ -156,12 +160,17 @@ private void addActionListeners() {
                 categoryCombo.addItem("نامشخص");
             }
 
+            JSpinner StokSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 100000, 1));
+            StokSpinner.setFont(vazirFont);
+            ((JSpinner.DefaultEditor) StokSpinner.getEditor()).getTextField().setFont(vazirFont);
+            ((JSpinner.DefaultEditor) StokSpinner.getEditor()).getTextField().setHorizontalAlignment(JTextField.RIGHT);
+
             nameField.setFont(vazirFont); priceField.setFont(vazirFont); 
-            stockField.setFont(vazirFont); categoryCombo.setFont(vazirFont);
+            StokSpinner.setFont(vazirFont); categoryCombo.setFont(vazirFont);
             
             nameField.setHorizontalAlignment(JTextField.RIGHT);
             priceField.setHorizontalAlignment(JTextField.RIGHT);
-            stockField.setHorizontalAlignment(JTextField.RIGHT);
+
 
             JLabel nameLabel = new JLabel("نام کالا:");
             JLabel priceLabel = new JLabel("قیمت (ریال):");
@@ -170,6 +179,7 @@ private void addActionListeners() {
             
             nameLabel.setFont(vazirFont); priceLabel.setFont(vazirFont); 
             stockLabel.setFont(vazirFont); catLabel.setFont(vazirFont);
+            categoryCombo.setFont(vazirFont);
             
             nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
             priceLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -182,7 +192,7 @@ private void addActionListeners() {
 
             inputPanel.add(nameLabel); inputPanel.add(nameField);
             inputPanel.add(priceLabel); inputPanel.add(priceField);
-            inputPanel.add(stockLabel); inputPanel.add(stockField);
+            inputPanel.add(stockLabel); inputPanel.add(StokSpinner);
             inputPanel.add(catLabel); inputPanel.add(categoryCombo);
 
             UIManager.put("Button.font", vazirFont);
@@ -198,14 +208,15 @@ private void addActionListeners() {
             );
             
             optionPane.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-            javax.swing.JDialog dialog = optionPane.createDialog(this, "افزودن کالای جدید 📦");
+            StokSpinner.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+            JDialog dialog = optionPane.createDialog(this, "افزودن کالای جدید 📦");
             dialog.setVisible(true);
 
             Object result = optionPane.getValue();
             if (result != null && result.equals("ثبت کالا")) {
                 String name = nameField.getText().trim();
                 String price = priceField.getText().trim();
-                String stock = stockField.getText().trim();
+                String stock = StokSpinner.getValue().toString().trim();
                 String category = categoryCombo.getSelectedItem().toString();
                 String message = "";
 
@@ -223,7 +234,7 @@ private void addActionListeners() {
         });
 
         editButton.addActionListener(e -> {
-            javax.swing.JTable tableInstance = TableUtil.getTableFromPanel(productTable);
+            JTable tableInstance = TableUtil.getTableFromPanel(productTable);
             if (tableInstance == null) return;
 
             int selectedRow = tableInstance.getSelectedRow();
@@ -244,7 +255,11 @@ private void addActionListeners() {
 
             JTextField nameField = new JTextField(oldName);
             JTextField priceField = new JTextField(oldPrice);
-            JTextField stockField = new JTextField(oldStock);
+
+            JSpinner StokSpinner = new JSpinner(new SpinnerNumberModel(Integer.parseInt(oldStock), 0, 100000, 1));
+            StokSpinner.setFont(vazirFont);
+            ((JSpinner.DefaultEditor) StokSpinner.getEditor()).getTextField().setFont(vazirFont);
+            ((JSpinner.DefaultEditor) StokSpinner.getEditor()).getTextField().setHorizontalAlignment(JTextField.RIGHT);
             
             JComboBox<String> categoryCombo = new JComboBox<>();
             for (int i = 1; i < comboBox.getItemCount(); i++) {
@@ -254,12 +269,11 @@ private void addActionListeners() {
             categoryCombo.setSelectedItem(oldCategory);
 
             nameField.setFont(vazirFont); priceField.setFont(vazirFont); 
-            stockField.setFont(vazirFont); categoryCombo.setFont(vazirFont);
+            StokSpinner.setFont(vazirFont); categoryCombo.setFont(vazirFont);
             
             nameField.setHorizontalAlignment(JTextField.RIGHT);
             priceField.setHorizontalAlignment(JTextField.RIGHT);
-            stockField.setHorizontalAlignment(JTextField.RIGHT);
-
+            
             JLabel nameLabel = new JLabel("نام جدید کالا:");
             JLabel priceLabel = new JLabel("قیمت جدید (ریال):");
             JLabel stockLabel = new JLabel("موجودی جدید:");
@@ -279,7 +293,7 @@ private void addActionListeners() {
 
             inputPanel.add(nameLabel); inputPanel.add(nameField);
             inputPanel.add(priceLabel); inputPanel.add(priceField);
-            inputPanel.add(stockLabel); inputPanel.add(stockField);
+            inputPanel.add(stockLabel); inputPanel.add(StokSpinner);
             inputPanel.add(catLabel); inputPanel.add(categoryCombo);
 
             UIManager.put("Button.font", vazirFont);
@@ -295,14 +309,15 @@ private void addActionListeners() {
             );
             
             optionPane.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-            javax.swing.JDialog dialog = optionPane.createDialog(this, "ویرایش کالا ✏️");
+            StokSpinner.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+            JDialog dialog = optionPane.createDialog(this, "ویرایش کالا ✏️");
             dialog.setVisible(true);
 
             Object result = optionPane.getValue();
             if (result != null && result.equals("ویرایش کالا")) {
                 String name = nameField.getText().trim();
                 String price = priceField.getText().trim();
-                String stock = stockField.getText().trim();
+                String stock = StokSpinner.getValue().toString().trim();
                 String category = categoryCombo.getSelectedItem().toString();
                 String message = "";
                 
@@ -320,7 +335,7 @@ private void addActionListeners() {
         });
 
         deleteButton.addActionListener(e -> {
-            javax.swing.JTable tableInstance = TableUtil.getTableFromPanel(productTable);
+            JTable tableInstance = TableUtil.getTableFromPanel(productTable);
             if (tableInstance != null) {
                 int selectedRow = tableInstance.getSelectedRow();
 

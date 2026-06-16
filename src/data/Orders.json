@@ -1,0 +1,17 @@
+[
+  {
+    "customerId": 1,
+    "orderId": 1,
+    "orderDate": "1405/03/26 12:59",
+    "totalAmount": 12000000000,
+    "orderItems": [
+      {
+        "productId": 770066,
+        "productName": "موبایل",
+        "productQuantity": 6,
+        "productUnitPrice": 2000000000,
+        "totalPrice": 12000000000
+      }
+    ]
+  }
+]
