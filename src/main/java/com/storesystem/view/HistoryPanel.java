@@ -266,10 +266,16 @@ public class HistoryPanel extends JPanel {
     private void applyDateRangeFilter(){
         String startDate = btnStartDate.getText().trim();
         String endDate = btnEndDate.getText().trim();
-        if (!startDate.equals("انتخاب تاریخ/ساعت شروع") &&
-                !endDate.equals("انتخاب تاریخ/ساعت پایان")) {
-            List<Object[]> results = controller.searchByDateRange(startDate, endDate);
-            TableUtil.refreshTable(topTablePanel, results);
+        if((!startDate.equals("انتخاب تاریخ/ساعت شروع"))|| (!endDate.equals("انتخاب تاریخ/ساعت پایان"))){
+            List<Object[]> list = new ArrayList<>();
+            if((!startDate.equals("انتخاب تاریخ/ساعت شروع"))&& (!endDate.equals("انتخاب تاریخ/ساعت پایان"))){
+                list = controller.searchByDateRange(startDate, endDate);
+            } else if (!startDate.equals("انتخاب تاریخ/ساعت شروع")) {
+                list = controller.searchByDateRange(startDate, null);
+            } else {
+                list = controller.searchByDateRange(null, endDate);
+            }
+            TableUtil.refreshTable(topTablePanel, list);
             controller.clearBottomTable();
         }
     }

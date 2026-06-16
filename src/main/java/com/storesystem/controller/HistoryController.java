@@ -72,8 +72,12 @@ public class HistoryController  {
         if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
             orders = OrderController.orderService.getOrdersByDateRange(startDate, endDate);
         } else if (startDate != null && !startDate.isEmpty()) {
-            orders = OrderController.orderService.getOrdersByDate(startDate);
-        } else {
+            orders = OrderController.orderService.getOrdersByDateRange(startDate, "1600/01/01");
+        }
+        else if (endDate != null && !endDate.isEmpty()) {
+            orders = OrderController.orderService.getOrdersByDateRange("1300/01/01", endDate);
+        }
+        else {
             orders = OrderController.orderService.getAllOrders();
         }
         return convertToTableData(orders);
