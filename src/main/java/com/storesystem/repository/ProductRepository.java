@@ -8,7 +8,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 public class ProductRepository {
-    private final String filePath = "data/Products.json";
+    private final String filePath = "src\\data\\Products.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<Long, Product> storage = new HashMap<>();
     private Set<Long>usedCodes = new HashSet<>();
@@ -27,9 +27,9 @@ public class ProductRepository {
             List<Product> products = gson.fromJson(reader,typeList);
             if(products!=null &&  !products.isEmpty()){
                 for(Product product : products){
-                   long code = product.getCode();
-                   storage.put(code, product);
-                   usedCodes.add(code);
+                    long code = product.getCode();
+                    storage.put(code, product);
+                    usedCodes.add(code);
                 }
             }
         } catch (IOException e) {
@@ -68,7 +68,6 @@ public class ProductRepository {
         }
         storage.replace(product.getCode(), product);
         saveData();
-
     }
     public void deleteProduct(Product product){
         if(product.getCode()==0){
@@ -80,7 +79,7 @@ public class ProductRepository {
         storage.remove(product.getCode());
         saveData();
     }
-    public List<Product> searchProductsByCategory(int categoryId){
+    public List<Product> searchProductsByCategory(long categoryId){
         List<Product> foundproducts = new ArrayList<>();
         for(Product product : storage.values()){
             if(categoryId == product.getCategoryId()){

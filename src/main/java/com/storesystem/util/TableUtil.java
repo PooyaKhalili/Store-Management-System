@@ -6,12 +6,18 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
+import java.util.List;
 
 public class TableUtil {
 
-    public static JPanel createTable(Object[][] data, String[] columnNames, int[] columnWidths) {
+    public static JPanel createTable(List<Object[]> data, String[] columnNames, int[] columnWidths) {
         
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+        Object[][] dataArray = new Object[0][0];
+        if (data != null) {
+            dataArray = data.toArray(new Object[0][]);
+        }
+
+        DefaultTableModel model = new DefaultTableModel(dataArray, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; 
@@ -83,5 +89,43 @@ public class TableUtil {
         wrapperPanel.add(scrollPane, BorderLayout.CENTER);
 
         return wrapperPanel;
+    }
+
+    public static void refreshTable(JPanel wrapperPanel, List<Object[]> newData) {
+        for (Component comp : wrapperPanel.getComponents()) {
+            if (comp instanceof JScrollPane) {
+                JScrollPane scrollPane = (JScrollPane) comp;
+                
+                Component view = scrollPane.getViewport().getView();
+                if (view instanceof JTable) {
+                    JTable table = (JTable) view;
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+                    
+                    model.setRowCount(0);
+                    
+                    if (newData != null) {
+                        for (Object[] row : newData) {
+                            model.addRow(row);
+                        }
+                    }
+                    
+                    return;
+                }
+            }
+        }
+        System.err.println("Error: JTable not found in the provided wrapper panel!");
+    }
+
+    public static JTable getTableFromPanel(JPanel wrapperPanel) {
+        for (Component comp : wrapperPanel.getComponents()) {
+            if (comp instanceof JScrollPane) {
+                JScrollPane scrollPane = (JScrollPane) comp;
+                Component view = scrollPane.getViewport().getView();
+                if (view instanceof JTable) {
+                    return (JTable) view;
+                }
+            }
+        }
+        return null;
     }
 }

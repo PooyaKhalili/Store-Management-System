@@ -15,7 +15,7 @@ public class CustomerService {
 
     public Customer createCustomer(String firstName, String lastName, String phoneNumber) {
         validateCustomer(firstName, lastName, phoneNumber);
-        Customer customer = new Customer(firstName, lastName, phoneNumber);
+        Customer customer = new Customer(firstName, lastName, phoneNumber, 0, 0);
         return customerRepository.addCustomer(customer);
     }
 
@@ -23,6 +23,7 @@ public class CustomerService {
         Customer existingCustomer = customerRepository.findCustomerById(id);
         if (existingCustomer == null)
             throw new IllegalArgumentException("Customer not found");
+        validateCustomer(firstName, lastName, phoneNumber);
         existingCustomer.setFirstName(firstName);
         existingCustomer.setLastName(lastName);
         existingCustomer.setPhoneNumber(phoneNumber);
@@ -61,10 +62,10 @@ public class CustomerService {
 
     private void validateCustomer(String firstName, String lastName, String phoneNumber) {
         if (firstName == null || firstName.trim().isEmpty())
-            throw new IllegalArgumentException("First name cannot be empty");
+            throw new IllegalArgumentException("نام نمی تواند خالی باشد");
         if (lastName == null || lastName.trim().isEmpty())
-            throw new IllegalArgumentException("Last name cannot be empty");
+            throw new IllegalArgumentException("نام خانوادگی نمی تواند خالی باشد");
         if (!Customer.isPhoneNumberValid(phoneNumber))
-            throw new IllegalArgumentException("Phone number is not valid");
+            throw new IllegalArgumentException("شماره تلفن نامعتبر است");
     }
 }

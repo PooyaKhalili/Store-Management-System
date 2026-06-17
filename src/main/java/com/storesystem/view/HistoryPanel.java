@@ -8,18 +8,18 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import java.util.ArrayList;
+import javax.swing.*;
+
 import com.storesystem.config.SetupUI;
+import com.storesystem.controller.HistoryController;
+import com.storesystem.util.JalaliDatePickerDialog;
 import com.storesystem.util.TableUtil;
+import java.awt.Window;
+import java.util.List;
 
 public class HistoryPanel extends JPanel {
-
+    private final HistoryController controller;
     private JPanel topTablePanel;
     private JPanel bottomTablePanel;
     private JPanel searchPanel;
@@ -32,25 +32,27 @@ public class HistoryPanel extends JPanel {
     private JButton btnEndDate;
     private JButton btnResetFilters;
     
-    private JButton btnRefresh;
+    JButton btnRefresh;
     private JButton btnDeleteSelected;
     private JButton btnDeleteAll;
     private JButton btnPrintReceipt;
     private JButton btnExportPDF;
 
     public HistoryPanel() {
+        this.controller = new HistoryController(this);
         initComponents();
         createSearchPanel();
         createButtonPanel();
         setupLayout();
+        setupTableSelection();
     }
 
     private void initComponents() {
-        topTablePanel = TableUtil.createTable(new Object[][] {}, 
+        topTablePanel = TableUtil.createTable(new ArrayList<>(), 
                 new String[] {"شماره سفارش", "کد مشتری", "تاریخ جلالی", "جمع جزء", "تخفیف", "مالیات", "جمع کل"},
                 new int[] {100, 100, 150, 100, 100, 100, 120} ); 
 
-        bottomTablePanel = TableUtil.createTable(new Object[][] {}, 
+        bottomTablePanel = TableUtil.createTable(new ArrayList<>(), 
                 new String[] {"کالا", "قیمت واحد", "تعداد", "جمع"},
                 new int[] {300, 150, 80, 150} );
 
@@ -164,6 +166,129 @@ public class HistoryPanel extends JPanel {
     }
 
     private void addActionListeners() {
+        btnDeleteAll.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "آیا از حذف تمامی سفارشات مطمئن هستید؟",
+                    "حذف همه",
+                    JOptionPane.YES_NO_OPTION
+                    );
+            if (confirm == JOptionPane.YES_OPTION) {
+                String result = controller.deleteAllOrders();
+                JOptionPane.showMessageDialog(this, result);
+                controller.refreshTopTable();
+                controller.clearBottomTable();
+            }
+        });
+        btnDeleteSelected.addActionListener(e -> {
+            JTable topTable = TableUtil.getTableFromPanel(topTablePanel);
+            if (topTable != null && topTable.getSelectedRow() >= 0) {
+                long orderId = Long.parseLong(topTable.getValueAt(topTable.getSelectedRow(), 0).toString());
+                int confirm = JOptionPane.showConfirmDialog(this,
+                        "آیا از حذف این سفارش اطمینان دارید؟",
+                        "حذف سفارش",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    String result = controller.deleteOrder((int)orderId);
+                    JOptionPane.showMessageDialog(this, result);
+                    controller.refreshTopTable();
+                    controller.clearBottomTable();
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "لطفا ابتدا یک سفارش را انتخاب کنید!", "خطا", JOptionPane.ERROR_MESSAGE);
+            }
         
+        });
+        btnPrintReceipt.addActionListener(e -> {
+        
+        });
+        btnExportPDF.addActionListener(e -> {
+        
+        });
+        btnRefresh.addActionListener(e -> {
+            controller.refreshTopTable();
+            controller.clearBottomTable();
+        });
+        btnStartDate.addActionListener(e -> {
+            Window window = SwingUtilities.getWindowAncestor(btnStartDate);
+            JalaliDatePickerDialog picker = new JalaliDatePickerDialog(window, "انتخاب تاریخ و ساعت شروع");
+            picker.setVisible(true);
+            if (picker.getSelectedDate() != null) {
+                btnStartDate.setText(picker.getSelectedDate());
+                applyDateRangeFilter();
+            }
+        });
+        btnEndDate.addActionListener(e -> {
+            Window window = SwingUtilities.getWindowAncestor(btnStartDate);
+            JalaliDatePickerDialog picker = new JalaliDatePickerDialog(window, "انتخاب تاریخ و ساعت پایان");
+            picker.setVisible(true);
+            if (picker.getSelectedDate() != null) {
+                btnEndDate.setText(picker.getSelectedDate());
+                applyDateRangeFilter();
+            }
+        
+        });
+        btnResetFilters.addActionListener(e -> {
+            btnStartDate.setText("انتخاب تاریخ/ساعت شروع");
+            btnEndDate.setText("انتخاب تاریخ/ساعت پایان");
+
+            searchField.setText("");
+            TableUtil.refreshTable(topTablePanel, controller.getAllOrders());
+            TableUtil.refreshTable(bottomTablePanel, new ArrayList<>());
+            JOptionPane.showMessageDialog(this,
+                        "فیلترها با موفقیت ریست شدند",
+                        "ریست فیلترها",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+        });
+        searchField.addActionListener(e -> {
+            String searchText = searchField.getText().trim();
+            TableUtil.refreshTable(topTablePanel, controller.searchOrders(searchText));
+            controller.clearBottomTable();
+
+        });
+
     }
+    private void setupTableSelection() {
+        JTable topTable = TableUtil.getTableFromPanel(topTablePanel);
+        if (topTable != null) {
+            topTable.getSelectionModel().addListSelectionListener(e -> {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = topTable.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        long orderId = Long.parseLong(topTable.getValueAt(selectedRow, 0).toString());
+                        controller.showOrderItems(orderId);
+                    }
+                }
+            });
+        }
+    }
+    private void applyDateRangeFilter(){
+        String startDate = btnStartDate.getText().trim();
+        String endDate = btnEndDate.getText().trim();
+        if((!startDate.equals("انتخاب تاریخ/ساعت شروع"))|| (!endDate.equals("انتخاب تاریخ/ساعت پایان"))){
+            List<Object[]> list = new ArrayList<>();
+            if((!startDate.equals("انتخاب تاریخ/ساعت شروع"))&& (!endDate.equals("انتخاب تاریخ/ساعت پایان"))){
+                list = controller.searchByDateRange(startDate, endDate);
+            } else if (!startDate.equals("انتخاب تاریخ/ساعت شروع")) {
+                list = controller.searchByDateRange(startDate, null);
+            } else {
+                list = controller.searchByDateRange(null, endDate);
+            }
+            TableUtil.refreshTable(topTablePanel, list);
+            controller.clearBottomTable();
+        }
+    }
+    public void refreshTopTable(List<Object[]> data) {
+        TableUtil.refreshTable(topTablePanel, data);
+    }
+
+    public void refreshBottomTable(List<Object[]> data) {
+        TableUtil.refreshTable(bottomTablePanel, data);
+    }
+
+    public void clearBottomTable() {
+        TableUtil.refreshTable(bottomTablePanel, new ArrayList<>());
+    }
+
 }

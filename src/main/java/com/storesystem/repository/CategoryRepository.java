@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CategoryRepository {
-    private final String filePath = "data/Categories.json";
+    private final String filePath = "src\\data\\Categories.json";
     private int id = 1;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<Integer, Category> storage = new HashMap<>();
@@ -23,7 +23,7 @@ public class CategoryRepository {
         try(Reader reader = new FileReader(filePath)){
             Type listType = new TypeToken<ArrayList<Category>>(){}.getType();
             List<Category> categories = new Gson().fromJson(reader, listType);
-            if(!categories.isEmpty()){
+            if(categories != null && !categories.isEmpty()){
                 for(Category c : categories){
                     int cId  = c.getId();
                     storage.put(cId, c);

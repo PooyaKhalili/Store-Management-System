@@ -3,21 +3,26 @@ package com.storesystem.service;
 import com.storesystem.model.Order;
 import com.storesystem.model.OrderItem;
 import com.storesystem.repository.OrderRepository;
+import com.storesystem.repository.CustomerRepository;
 
 import java.util.List;
 
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final CustomerRepository customerRepository;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, CustomerRepository customerRepository) {
         this.orderRepository = orderRepository;
+        this.customerRepository = customerRepository;
     }
 
     public Order createOrder(long customerId, String orderDate, List<OrderItem> items) {
         validateOrder(customerId, orderDate, items);
         Order order = new Order(customerId, orderDate, items);
-        return orderRepository.addOrder(order);
+        Order savedOrder = orderRepository.addOrder(order);
+        customerRepository.updateCustomerPurchaseStats((int) customerId, savedOrder.getTotalAmount());
+        return savedOrder;
     }
 
     public Order getOrderById(long orderId) {
@@ -50,5 +55,16 @@ public class OrderService {
             throw new IllegalArgumentException("Order date cannot be empty");
         if (items == null || items.isEmpty())
             throw new IllegalArgumentException("Order must contain at least one item");
+    }
+    public List<Order> getOrdersByDateRange(String startDate, String endDate) {
+        return orderRepository.findOrdersByDateRange(startDate, endDate);
+    }
+
+    public List<Order> getOrdersByDate(String date) {
+        return orderRepository.findOrdersByDate(date);
+    }
+
+    public void deleteAllOrders() {
+        orderRepository.deleteAllOrders();
     }
 }

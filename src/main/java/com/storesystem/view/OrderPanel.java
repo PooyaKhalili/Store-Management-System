@@ -6,6 +6,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,33 +14,41 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
+
 import com.storesystem.config.SetupUI;
 import com.storesystem.util.TableUtil;
+import com.storesystem.controller.OrderController;
 
 public class OrderPanel extends JPanel {
 
-    private JPanel productTable;
-    private JPanel cartTable;
+    public JPanel productTable;
+    public JPanel cartTable;
 
-    private JButton addCustomerButton;
+    public Runnable onAddCustomerClick;
+
+    public JButton addCustomerButton;
 
     private JButton payButton;
     private JButton deleteButton;
-    private JButton refreshButton;
+    JButton refreshButton;
     private JButton editButton;
     private JPanel buttonPanel1;
 
     private JButton addToCartButton;
     private JPanel buttonPanel2;
 
-    private JComboBox<String> comboBox1;
+    public JComboBox<String> comboBox1;
     private JTextField searchField1;
-    private JComboBox<String> comboBox2;
+    public JComboBox<String> comboBox2;
     private JTextField searchField2;
     private JLabel searchCustomerLabel;
     private JLabel selectCustomerLabel;
@@ -53,12 +62,15 @@ public class OrderPanel extends JPanel {
     private JSplitPane splitPane;
 
     private JPanel lablePanel;
-    private JLabel totalSumLabel;
+    public JLabel totalSumLabel;
 
     private int total=0;
 
+    public OrderController controller;
+
 
     public OrderPanel() {
+        controller = new OrderController(this);
         initComponents();
         createButtonPanel();
         creatSearchPanel();
@@ -66,11 +78,11 @@ public class OrderPanel extends JPanel {
     }
 
     private void initComponents() {
-        cartTable = TableUtil.createTable(new Object[][] {}, 
+        cartTable = TableUtil.createTable(new ArrayList<>(), 
                 new String[] {"کد کالا", "نام کالا", "قیمت", "موجودی", "دسته"},
                 new int[] {60, 180, 100, 60, 100} );
                 
-        productTable = TableUtil.createTable(new Object[][] {}, 
+        productTable = TableUtil.createTable(new ArrayList<>(), 
                 new String[] {"کد کالا", "کالا", "قیمت واحد", "تعداد", "جمع"},
                 new int[] {60, 170, 100, 50, 120} );
 
@@ -90,8 +102,11 @@ public class OrderPanel extends JPanel {
 
         buttonPanel1 = new JPanel();
         buttonPanel2 = new JPanel();
-        comboBox1 = new JComboBox<>(new String[] {"همه"});
-        comboBox2 = new JComboBox<>(new String[] {"همه"});
+        comboBox1 = new JComboBox<>();
+        comboBox2 = new JComboBox<>();
+        controller.loadCustomersIntoComboBox();
+        controller.loadCategoriesIntoComboBox();
+        controller.searchProductForOrder(null, "همه");
         searchField1 = new JTextField();
         searchField2 = new JTextField();
         searchPanel1 = new JPanel();
@@ -235,6 +250,175 @@ private void creatSearchPanel() {
     }
 
     private void addActionListeners() {
+        Font vazirFont = new Font("Vazir", Font.PLAIN, 14);
+
+        searchField1.addActionListener(e -> {
+            if (controller != null) controller.searchCustomer(searchField1.getText().trim());
+        });
         
+        comboBox1.addActionListener(e -> {
+            if (controller != null && comboBox1.getSelectedItem() != null) {}
+        });
+
+        searchField2.addActionListener(e -> {
+            if (controller != null && comboBox2.getSelectedItem() != null) {
+                String text = searchField2.getText().trim();
+                String category = comboBox2.getSelectedItem().toString();
+                controller.searchProductForOrder(text, category);
+            }
+        });
+
+        comboBox2.addActionListener(e -> {
+            if (controller != null && comboBox2.getSelectedItem() != null) {
+                String text = searchField2.getText().trim();
+                String category = comboBox2.getSelectedItem().toString();
+                controller.searchProductForOrder(text, category);
+            }
+        });
+
+        addCustomerButton.addActionListener(e -> {
+            if (onAddCustomerClick != null) {
+                onAddCustomerClick.run(); 
+                
+                if (controller != null) {
+                    controller.loadCustomersIntoComboBox();
+                }
+            }
+
+        });
+
+        addToCartButton.addActionListener(e -> {
+            JTable table = TableUtil.getTableFromPanel(cartTable);
+            if (table == null) return;
+            
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                UIManager.put("OptionPane.messageFont", vazirFont);
+                JOptionPane.showMessageDialog(this, "لطفاً ابتدا یک کالا را از لیست جستجو انتخاب کنید!", "خطا", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String codeStr = table.getValueAt(selectedRow, 0).toString();
+            String name = table.getValueAt(selectedRow, 1).toString();
+
+            javax.swing.JSpinner qtySpinner = new javax.swing.JSpinner(new javax.swing.SpinnerNumberModel(1, 1, 100000, 1));
+            qtySpinner.setFont(vazirFont);
+            qtySpinner.setPreferredSize(new Dimension(100, 30));
+
+            JPanel inputPanel = new JPanel();
+            inputPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            JLabel label = new JLabel("تعداد مورد نیاز برای «" + name + "»:");
+            label.setFont(vazirFont);
+            inputPanel.add(qtySpinner);
+            inputPanel.add(label);
+
+            UIManager.put("Button.font", vazirFont);
+            int result = JOptionPane.showConfirmDialog(this, inputPanel, "افزودن به سبد 🛒", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            
+            if (result == JOptionPane.OK_OPTION) {
+                int qty = (Integer) qtySpinner.getValue();
+                String msg = controller.addToCart(Long.parseLong(codeStr), qty);
+                if (!msg.equals("کالا به سبد خرید اضافه شد")) {
+                    UIManager.put("OptionPane.messageFont", vazirFont);
+                    JOptionPane.showMessageDialog(this, msg, "خطا", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        editButton.addActionListener(e -> {
+            JTable table = TableUtil.getTableFromPanel(productTable);
+            if (table == null) return;
+
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                UIManager.put("OptionPane.messageFont", vazirFont);
+                JOptionPane.showMessageDialog(this, "لطفاً ابتدا یک کالا را از سبد خرید انتخاب کنید!", "خطا", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String codeStr = table.getValueAt(selectedRow, 0).toString();
+            String name = table.getValueAt(selectedRow, 1).toString();
+            int currentQty = Integer.parseInt(table.getValueAt(selectedRow, 3).toString());
+
+            JSpinner qtySpinner = new JSpinner(new javax.swing.SpinnerNumberModel(currentQty, 1, 100000, 1));
+            qtySpinner.setFont(vazirFont);
+            qtySpinner.setPreferredSize(new Dimension(100, 30));
+
+            JPanel inputPanel = new JPanel();
+            inputPanel.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            JLabel label = new JLabel("تعداد جدید برای «" + name + "»:");
+            label.setFont(vazirFont);
+            inputPanel.add(qtySpinner);
+            inputPanel.add(label);
+
+            UIManager.put("Button.font", vazirFont);
+            int result = JOptionPane.showConfirmDialog(this, inputPanel, "ویرایش تعداد ✏️", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                int newQty = (Integer) qtySpinner.getValue();
+                String msg = controller.editCartItem(Long.parseLong(codeStr), newQty);
+                if (!msg.equals("تعداد با موفقیت ویرایش شد")) {
+                    UIManager.put("OptionPane.messageFont", vazirFont);
+                    JOptionPane.showMessageDialog(this, msg, "خطا", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        deleteButton.addActionListener(e -> {
+            JTable table = TableUtil.getTableFromPanel(productTable);
+            if (table != null) {
+                int selectedRow = table.getSelectedRow();
+
+                if (selectedRow == -1) {
+                    UIManager.put("OptionPane.messageFont", vazirFont);
+                    JOptionPane.showMessageDialog(this, "لطفاً ابتدا یک کالا را از سبد خرید انتخاب کنید!", "خطا", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                String codeStr = table.getValueAt(selectedRow, 0).toString();
+                String name = table.getValueAt(selectedRow, 1).toString();
+                
+                UIManager.put("OptionPane.messageFont", vazirFont);
+                UIManager.put("Button.font", vazirFont);
+                if (JOptionPane.showConfirmDialog(this, "آیا از حذف «" + name + "» از سبد خرید اطمینان دارید؟", "حذف از سبد", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    if (controller != null) controller.deleteFromCart(Long.parseLong(codeStr));
+                }
+            }
+        });
+
+        payButton.addActionListener(e -> {
+            if (controller == null) return;
+            String customerDetails = comboBox1.getSelectedItem().toString();
+            UIManager.put("OptionPane.messageFont", vazirFont);
+            UIManager.put("Button.font", vazirFont);
+            if (JOptionPane.showConfirmDialog(this, "آیا از ثبت نهایی این فاکتور اطمینان دارید؟", "تسویه حساب 💳", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                String msg = controller.checkout(customerDetails);
+                if (msg.contains("موفقیت")) {
+                    JOptionPane.showMessageDialog(this, msg, "عملیات موفق", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, msg, "خطا", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        refreshButton.addActionListener(e -> {
+            if (controller != null) {
+                controller.refreshCartTable();
+                searchField1.setText("");
+                searchField2.setText("");
+                controller.loadCustomersIntoComboBox();
+                controller.loadCategoriesIntoComboBox();
+                controller.searchProductForOrder(null, "همه");
+            }
+        });
+
+        searchField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                if (controller != null) {
+                    controller.searchCustomer(searchField1.getText().trim());
+                }
+            }
+        });
     }
 }

@@ -18,12 +18,19 @@ public class SideBarPanel extends JPanel {
     private JButton purchaseHistoryButton;
     private JButton reportButton;
 
-    public SideBarPanel() {
+    // ۱. تعریف پنل‌ها به صورت متغیرهای کلاس تا فقط یک بار در حافظه ساخته شوند
+    private CategoryPanel categoryPanel;
+    private ProductPanel productPanel;
+    private CustomerPanel customerPanel;
+    private OrderPanel orderPanel;
+    private HistoryPanel historyPanel;
+    private ReportPanel reportPanel;
 
+    public SideBarPanel() {
         setupLayout();
         initComponents();
+        initPanels();
         addActionListeners();
-
     }
 
     private void initComponents() {
@@ -50,68 +57,66 @@ public class SideBarPanel extends JPanel {
         applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
     }
 
+    private void initPanels() {
+        categoryPanel = new CategoryPanel();
+        productPanel = new ProductPanel();
+        customerPanel = new CustomerPanel();
+        orderPanel = new OrderPanel();
+        historyPanel = new HistoryPanel();
+        reportPanel = new ReportPanel();
+
+        orderPanel.onAddCustomerClick = () -> {
+            if (customerPanel.addButton != null) {
+                customerPanel.addButton.doClick();
+            }
+        };
+    }
+
     private void addActionListeners() {
         categoryButton.addActionListener(e -> {
-            SetupUI.updateButtonStyle(productButton, false);
-            SetupUI.updateButtonStyle(customerButton, false);
-            SetupUI.updateButtonStyle(shoppingCartButton, false);
-            SetupUI.updateButtonStyle(purchaseHistoryButton, false);
-            SetupUI.updateButtonStyle(reportButton, false);
-            SetupUI.updateButtonStyle(categoryButton, true);
-            MainFrame.switchPanel(new CategoryPanel());
-
+            updateAllButtons(categoryButton);
+            categoryPanel.refreshButton.doClick();
+            MainFrame.switchPanel(categoryPanel);
         });
+        
         productButton.addActionListener(e -> {
-            SetupUI.updateButtonStyle(categoryButton, false);
-            SetupUI.updateButtonStyle(customerButton, false);
-            SetupUI.updateButtonStyle(shoppingCartButton, false);
-            SetupUI.updateButtonStyle(purchaseHistoryButton, false);
-            SetupUI.updateButtonStyle(reportButton, false);
-            SetupUI.updateButtonStyle(productButton, true);
-            MainFrame.switchPanel(new ProductPanel());
-  
+            updateAllButtons(productButton);
+            productPanel.refreshButton.doClick();
+            MainFrame.switchPanel(productPanel);
         });
+        
         customerButton.addActionListener(e -> {
-            SetupUI.updateButtonStyle(categoryButton, false);
-            SetupUI.updateButtonStyle(customerButton, true);
-            SetupUI.updateButtonStyle(shoppingCartButton, false);
-            SetupUI.updateButtonStyle(purchaseHistoryButton, false);
-            SetupUI.updateButtonStyle(reportButton, false);
-            SetupUI.updateButtonStyle(productButton, false);
-            MainFrame.switchPanel(new CustomerPanel());            
-            
+            updateAllButtons(customerButton);
+            customerPanel.refreshButton.doClick();
+            MainFrame.switchPanel(customerPanel);
         });
+        
         shoppingCartButton.addActionListener(e -> {
-            SetupUI.updateButtonStyle(categoryButton, false);
-            SetupUI.updateButtonStyle(customerButton, false);
-            SetupUI.updateButtonStyle(shoppingCartButton, true);
-            SetupUI.updateButtonStyle(purchaseHistoryButton, false);
-            SetupUI.updateButtonStyle(reportButton, false);
-            SetupUI.updateButtonStyle(productButton, false);
-            MainFrame.switchPanel(new OrderPanel());
-            
+            updateAllButtons(shoppingCartButton);
+            orderPanel.refreshButton.doClick();
+            MainFrame.switchPanel(orderPanel);
         });
+        
         purchaseHistoryButton.addActionListener(e -> {
-            SetupUI.updateButtonStyle(categoryButton, false);
-            SetupUI.updateButtonStyle(customerButton, false);
-            SetupUI.updateButtonStyle(shoppingCartButton, false);
-            SetupUI.updateButtonStyle(purchaseHistoryButton, true);
-            SetupUI.updateButtonStyle(reportButton, false);
-            SetupUI.updateButtonStyle(productButton, false);
-            MainFrame.switchPanel(new HistoryPanel());
-            
+            updateAllButtons(purchaseHistoryButton);
+            historyPanel.btnRefresh.doClick();
+            MainFrame.switchPanel(historyPanel);
         });
+        
         reportButton.addActionListener(e -> {
-            SetupUI.updateButtonStyle(categoryButton, false);
-            SetupUI.updateButtonStyle(customerButton, false);
-            SetupUI.updateButtonStyle(shoppingCartButton, false);
-            SetupUI.updateButtonStyle(purchaseHistoryButton, false);
-            SetupUI.updateButtonStyle(reportButton, true);
-            SetupUI.updateButtonStyle(productButton, false);
-            MainFrame.switchPanel(new ReportPanel());
-            
+            updateAllButtons(reportButton);
+            reportPanel.refreshButton.doClick();
+            MainFrame.switchPanel(reportPanel);
         });
     }
 
-
+    // متد کمکی برای جلوگیری از کدهای تکراری در تغییر استایل دکمه‌ها
+    private void updateAllButtons(JButton activeBtn) {
+        SetupUI.updateButtonStyle(categoryButton, categoryButton == activeBtn);
+        SetupUI.updateButtonStyle(productButton, productButton == activeBtn);
+        SetupUI.updateButtonStyle(customerButton, customerButton == activeBtn);
+        SetupUI.updateButtonStyle(shoppingCartButton, shoppingCartButton == activeBtn);
+        SetupUI.updateButtonStyle(purchaseHistoryButton, purchaseHistoryButton == activeBtn);
+        SetupUI.updateButtonStyle(reportButton, reportButton == activeBtn);
+    }
 }

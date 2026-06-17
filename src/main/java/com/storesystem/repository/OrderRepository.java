@@ -6,9 +6,10 @@ import com.storesystem.model.Order;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
+import com.storesystem.util.JalaliDateUtil;
 
 public class OrderRepository {
-    private final String filePath = "data/Orders.json";
+    private final String filePath = "src\\data\\Orders.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<Long, Order> storage = new HashMap<>();
     private long nextOrderId = 1;
@@ -65,7 +66,11 @@ public class OrderRepository {
         saveData();
         return order;
     }
-
+    public void deleteAllOrders() {
+        storage.clear();
+        nextOrderId = 1;
+        saveData();
+    }
     public Order findOrderById(long orderId) {return storage.get(orderId);}
 
     public List<Order> findAllOrders() {return new ArrayList<>(storage.values());}
@@ -92,11 +97,26 @@ public class OrderRepository {
         return foundOrders;
     }
 
-//    public List<Order> findOrdersByDate(String date) {
-//
-//    }
+    public List<Order> findOrdersByDate(String date) {
+        List<Order> foundOrders = new ArrayList<>();
+        for(Order order : storage.values()) {
+            if(JalaliDateUtil.compareJalaliDates(order.getOrderDate(), date) == 0) {
+                foundOrders.add(order);
+            }
+        }
+        return foundOrders;
+    }
 
-//    public List<Order> findOrdersByDateRange(String startDate, String endDate) {
-//
-//    }
+    public List<Order> findOrdersByDateRange(String startDate, String endDate) {
+        if(JalaliDateUtil.compareJalaliDates(startDate, endDate) > 0) {
+            throw new IllegalArgumentException("Cannot find orders between " + startDate + " and " + endDate);
+        }
+        List<Order> foundOrders = new ArrayList<>();
+        for(Order order : storage.values()) {
+            if((JalaliDateUtil.compareJalaliDates(startDate, order.getOrderDate()) <= 0) && (JalaliDateUtil.compareJalaliDates(order.getOrderDate(), endDate) <= 0)) {
+                foundOrders.add(order);
+            }
+        }
+        return foundOrders;
+    }
 }

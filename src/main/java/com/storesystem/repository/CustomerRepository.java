@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomerRepository {
-    private final String filePath = "data/Customers.json";
+    private final String filePath = "src\\data\\Customers.json";
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Map<Integer, Customer> storage = new HashMap<>();
     private int nextId = 1;
@@ -42,6 +42,14 @@ public class CustomerRepository {
         }
         catch (IOException e){
             System.out.println("CustomerRepository : File not found");
+        }
+    }
+    public void updateCustomerPurchaseStats(int customerId, long orderAmount) {
+        Customer customer = storage.get(customerId);
+        if (customer != null) {
+            customer.setBuyCount(customer.getBuyCount() + 1);
+            customer.setTotalPaid(customer.getTotalPaid() + orderAmount);
+            saveData();
         }
     }
     public void saveData(){
