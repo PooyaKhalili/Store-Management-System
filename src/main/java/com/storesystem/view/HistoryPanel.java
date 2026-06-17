@@ -32,7 +32,7 @@ public class HistoryPanel extends JPanel {
     private JButton btnEndDate;
     private JButton btnResetFilters;
     
-    private JButton btnRefresh;
+    JButton btnRefresh;
     private JButton btnDeleteSelected;
     private JButton btnDeleteAll;
     private JButton btnPrintReceipt;
