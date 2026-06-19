@@ -42,11 +42,10 @@ public class CustomerController {
         return data;
     }
 
-public void searchCustomer(String text) {
+    public void searchCustomer(String text) {
         List<Customer> uniqueCustomers = new ArrayList<>();
 
         if (text != null && !text.trim().isEmpty()) {
-            
             List<Customer> allResults = new ArrayList<>();
 
             if (customerService.searchByFirstName(text) != null) {
@@ -102,7 +101,7 @@ public void searchCustomer(String text) {
         Customer selectedCustomer = customerService.getCustomerById(id);
         try{
            for(Customer customer:customerService.searchByPhone(phoneNumber)){
-            if (phoneNumber==customer.getPhoneNumber()&&customer.getId()!=selectedCustomer.getId()) {
+            if (phoneNumber.equals(customer.getPhoneNumber()) && customer.getId()!=selectedCustomer.getId()) {
                 return "مشتری با این شماره تلفن قبلا ثبت شده است";
             }
         }

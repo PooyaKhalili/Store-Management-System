@@ -9,9 +9,11 @@ import java.text.DecimalFormat;
 public class HistoryController  {
     private final HistoryPanel historyPanel;
     private final DecimalFormat priceFormatter = new DecimalFormat("###,###,###");
+
     public HistoryController(HistoryPanel historyPanel) {
         this.historyPanel = historyPanel;
     }
+
     public List<Object[]> getAllOrders(){
         List<Order> orders = OrderController.orderService.getAllOrders();
         List<Object[]> list = new ArrayList<>();
@@ -30,6 +32,7 @@ public class HistoryController  {
         }
         return list;
     }
+
     public String deleteOrder(int orderId){
         try {
             OrderController.orderService.deleteOrder(orderId);
@@ -39,6 +42,7 @@ public class HistoryController  {
         }
 
     }
+
     public String deleteAllOrders() {
         try {
             OrderController.orderService.deleteAllOrders();
@@ -47,6 +51,7 @@ public class HistoryController  {
             return "خطا: " + e.getMessage();
         }
     }
+
     public List<Object[]> getOrderItems(long orderId) {
         try {
             Order order = OrderController.orderService.getOrderById(orderId);
@@ -67,6 +72,7 @@ public class HistoryController  {
             return new ArrayList<>();
         }
     }
+
     public List<Object[]> searchByDateRange(String startDate, String endDate) {
         List<Order> orders;
         if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
@@ -82,6 +88,7 @@ public class HistoryController  {
         }
         return convertToTableData(orders);
     }
+
     public List<Object[]> searchOrders(String searchText) {
         if (searchText == null || searchText.trim().isEmpty()) {
             return getAllOrders();
@@ -116,6 +123,7 @@ public class HistoryController  {
 
         return convertToTableData(unique);
     }
+
     public List<Object[]> convertToTableData(List<Order> orders) {
         List<Object[]> list = new ArrayList<>();
         for (Order order : orders) {
@@ -133,6 +141,7 @@ public class HistoryController  {
         }
         return list;
     }
+
     public void refreshTopTable() {
         historyPanel.refreshTopTable(getAllOrders());
     }
@@ -140,6 +149,7 @@ public class HistoryController  {
     public void clearBottomTable() {
         historyPanel.clearBottomTable();
     }
+
     public void showOrderItems(long orderId) {
         List<Object[]> items = getOrderItems(orderId);
         historyPanel.refreshBottomTable(items);
