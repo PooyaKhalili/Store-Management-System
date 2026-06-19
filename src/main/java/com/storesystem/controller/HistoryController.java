@@ -12,19 +12,22 @@ public class HistoryController  {
     public HistoryController(HistoryPanel historyPanel) {
         this.historyPanel = historyPanel;
     }
-    public List<Object[]> getAllOrders(){
+    
+    public List<Object[]> getAllOrders() {
         List<Order> orders = OrderController.orderService.getAllOrders();
         List<Object[]> list = new ArrayList<>();
-        for(Order order : orders){
-            Object[]row  = {
-                    order.getOrderId(),
-                    order.getCustomerId(),
-                    order.getOrderDate(),
-                    order.getTotalAmount(),
-                    priceFormatter.format(order.getTotalAmount()),
-                    "0",
-                    "0",
-                    priceFormatter.format(order.getTotalAmount())
+        for (Order order : orders) {
+            long subtotal = order.getTotalAmount();
+            long total = subtotal;
+
+            Object[] row = {
+                order.getOrderId(),
+                order.getCustomerId(),
+                order.getOrderDate(),
+                priceFormatter.format(subtotal),
+                "0",
+                "0",
+                priceFormatter.format(total)
             };
             list.add(row);
         }
@@ -116,23 +119,27 @@ public class HistoryController  {
 
         return convertToTableData(unique);
     }
-    public List<Object[]> convertToTableData(List<Order> orders) {
-        List<Object[]> list = new ArrayList<>();
-        for (Order order : orders) {
-            Object[] row = {
-                    order.getOrderId(),
-                    order.getCustomerId(),
-                    order.getOrderDate(),
-                    order.getTotalAmount(),
-                    priceFormatter.format(order.getTotalAmount()),
-                    "0",
-                    "0",
-                    priceFormatter.format(order.getTotalAmount())
-            };
-            list.add(row);
-        }
-        return list;
+public List<Object[]> convertToTableData(List<Order> orders) {
+    List<Object[]> list = new ArrayList<>();
+    for (Order order : orders) {
+        long subtotal = order.getTotalAmount();
+        long tax = 0;
+        long discount = 0;
+        long total = subtotal - discount + tax;
+
+        Object[] row = {
+                order.getOrderId(),
+                order.getCustomerId(),
+                order.getOrderDate(),
+                priceFormatter.format(subtotal),
+                String.valueOf(discount),
+                String.valueOf(tax),
+                priceFormatter.format(total)
+        };
+        list.add(row);
     }
+    return list;
+}
     public void refreshTopTable() {
         historyPanel.refreshTopTable(getAllOrders());
     }
