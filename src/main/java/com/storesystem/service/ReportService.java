@@ -58,7 +58,8 @@ public class ReportService {
                 }
             }
         }
-        return  result;
+        result.sort((row1, row2) -> ((Integer) row2[1]).compareTo((Integer) row1[1]));
+        return result;
     }
 
     public List<Object[]> getCustomerPurchaseSummary(){
@@ -86,6 +87,7 @@ public class ReportService {
                 result.add(new Object[]{customerName,1,orderAmount});
             }
         }
+        result.sort((row1, row2) -> ((Double) row2[2]).compareTo((Double) row1[2]));
         return result;
     }
 }
