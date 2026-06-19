@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import com.storesystem.config.SetupUI;
 
+
+
 public class SideBarPanel extends JPanel {
 
     private JButton categoryButton;

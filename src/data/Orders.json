@@ -1,1 +1,39 @@
-[]
+[
+  {
+    "customerId": 1,
+    "orderId": 1,
+    "orderDate": "1405/03/29 18:05",
+    "totalAmount": 60000,
+    "orderItems": [
+      {
+        "productId": 753480,
+        "productName": "چیپس",
+        "productQuantity": 1,
+        "productUnitPrice": 50000,
+        "totalPrice": 50000
+      },
+      {
+        "productId": 768078,
+        "productName": "پفک",
+        "productQuantity": 1,
+        "productUnitPrice": 10000,
+        "totalPrice": 10000
+      }
+    ]
+  },
+  {
+    "customerId": 2,
+    "orderId": 2,
+    "orderDate": "1405/03/29 18:06",
+    "totalAmount": 70000,
+    "orderItems": [
+      {
+        "productId": 768078,
+        "productName": "پفک",
+        "productQuantity": 7,
+        "productUnitPrice": 10000,
+        "totalPrice": 70000
+      }
+    ]
+  }
+]

@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "code": 753480,
+    "name": "چیپس",
+    "price": 50000,
+    "categoryId": 1,
+    "stock": 2
+  },
+  {
+    "code": 768078,
+    "name": "پفک",
+    "price": 10000,
+    "categoryId": 1,
+    "stock": 3
+  }
+]

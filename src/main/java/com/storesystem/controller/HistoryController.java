@@ -6,13 +6,15 @@ import com.storesystem.view.HistoryPanel;
 import java.util.List;
 import java.util.ArrayList;
 import java.text.DecimalFormat;
-public class HistoryController  {
+
+public class HistoryController {
     private final HistoryPanel historyPanel;
     private final DecimalFormat priceFormatter = new DecimalFormat("###,###,###");
+
     public HistoryController(HistoryPanel historyPanel) {
         this.historyPanel = historyPanel;
     }
-    
+
     public List<Object[]> getAllOrders() {
         List<Order> orders = OrderController.orderService.getAllOrders();
         List<Object[]> list = new ArrayList<>();
@@ -21,27 +23,28 @@ public class HistoryController  {
             long total = subtotal;
 
             Object[] row = {
-                order.getOrderId(),
-                order.getCustomerId(),
-                order.getOrderDate(),
-                priceFormatter.format(subtotal),
-                "0",
-                "0",
-                priceFormatter.format(total)
+                    order.getOrderId(),
+                    order.getCustomerId(),
+                    order.getOrderDate(),
+                    priceFormatter.format(subtotal),
+                    "0",
+                    "0",
+                    priceFormatter.format(total)
             };
             list.add(row);
         }
         return list;
     }
-    public String deleteOrder(int orderId){
+
+    public String deleteOrder(int orderId) {
         try {
             OrderController.orderService.deleteOrder(orderId);
             return "سفارش با موفقیت حذف شد";
-        }catch(Exception e){
+        } catch (Exception e) {
             return "خطا: " + e.getMessage();
         }
-
     }
+
     public String deleteAllOrders() {
         try {
             OrderController.orderService.deleteAllOrders();
@@ -50,6 +53,7 @@ public class HistoryController  {
             return "خطا: " + e.getMessage();
         }
     }
+
     public List<Object[]> getOrderItems(long orderId) {
         try {
             Order order = OrderController.orderService.getOrderById(orderId);
@@ -70,21 +74,21 @@ public class HistoryController  {
             return new ArrayList<>();
         }
     }
+
     public List<Object[]> searchByDateRange(String startDate, String endDate) {
         List<Order> orders;
         if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
             orders = OrderController.orderService.getOrdersByDateRange(startDate, endDate);
         } else if (startDate != null && !startDate.isEmpty()) {
             orders = OrderController.orderService.getOrdersByDateRange(startDate, "1600/01/01");
-        }
-        else if (endDate != null && !endDate.isEmpty()) {
+        } else if (endDate != null && !endDate.isEmpty()) {
             orders = OrderController.orderService.getOrdersByDateRange("1300/01/01", endDate);
-        }
-        else {
+        } else {
             orders = OrderController.orderService.getAllOrders();
         }
         return convertToTableData(orders);
     }
+
     public List<Object[]> searchOrders(String searchText) {
         if (searchText == null || searchText.trim().isEmpty()) {
             return getAllOrders();
@@ -99,7 +103,7 @@ public class HistoryController  {
                 results.add(order);
             }
         } catch (NumberFormatException e) {
-            //search by OrderId
+            // search by OrderId
         }
 
         try {
@@ -107,7 +111,7 @@ public class HistoryController  {
             List<Order> customerOrders = OrderController.orderService.getOrdersByCustomerId(customerId);
             results.addAll(customerOrders);
         } catch (NumberFormatException e) {
-            //search by CustomerId
+            // search by CustomerId
         }
 
         List<Order> unique = new ArrayList<>();
@@ -119,27 +123,29 @@ public class HistoryController  {
 
         return convertToTableData(unique);
     }
-public List<Object[]> convertToTableData(List<Order> orders) {
-    List<Object[]> list = new ArrayList<>();
-    for (Order order : orders) {
-        long subtotal = order.getTotalAmount();
-        long tax = 0;
-        long discount = 0;
-        long total = subtotal - discount + tax;
 
-        Object[] row = {
-                order.getOrderId(),
-                order.getCustomerId(),
-                order.getOrderDate(),
-                priceFormatter.format(subtotal),
-                String.valueOf(discount),
-                String.valueOf(tax),
-                priceFormatter.format(total)
-        };
-        list.add(row);
+    public List<Object[]> convertToTableData(List<Order> orders) {
+        List<Object[]> list = new ArrayList<>();
+        for (Order order : orders) {
+            long subtotal = order.getTotalAmount();
+            long tax = 0;
+            long discount = 0;
+            long total = subtotal - discount + tax;
+
+            Object[] row = {
+                    order.getOrderId(),
+                    order.getCustomerId(),
+                    order.getOrderDate(),
+                    priceFormatter.format(subtotal),
+                    String.valueOf(discount),
+                    String.valueOf(tax),
+                    priceFormatter.format(total)
+            };
+            list.add(row);
+        }
+        return list;
     }
-    return list;
-}
+
     public void refreshTopTable() {
         historyPanel.refreshTopTable(getAllOrders());
     }
@@ -147,6 +153,7 @@ public List<Object[]> convertToTableData(List<Order> orders) {
     public void clearBottomTable() {
         historyPanel.clearBottomTable();
     }
+
     public void showOrderItems(long orderId) {
         List<Object[]> items = getOrderItems(orderId);
         historyPanel.refreshBottomTable(items);
