@@ -2,18 +2,19 @@ package com.storesystem.controller;
 
 import com.ibm.icu.impl.UResource;
 import com.storesystem.service.ReportService;
+import com.storesystem.util.AppContext;
 import com.storesystem.util.TableUtil;
 import com.storesystem.view.ReportPanel;
 
 import java.util.List;
 
 public class ReportController {
-    private ReportPanel view;
-    private ReportService reportService;
+    private final ReportPanel view;
+    private final ReportService reportService;
 
-    public ReportController(ReportPanel view){
+    public ReportController(ReportPanel view) {
         this.view = view;
-        this.reportService = new ReportService();
+        this.reportService = AppContext.reportService;
         initController();
         loadReports();
     }

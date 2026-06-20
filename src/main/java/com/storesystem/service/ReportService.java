@@ -8,20 +8,18 @@ import com.storesystem.model.Product;
 import com.storesystem.repository.CustomerRepository;
 import com.storesystem.repository.OrderRepository;
 import com.storesystem.repository.ProductRepository;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ReportService {
     private final OrderService orderService;
     private final ProductService productService;
     private final CustomerService customerService;
 
-    public ReportService(){
-        this.orderService = new OrderService(new OrderRepository(),new CustomerRepository());
-        this.productService = new ProductService(new ProductRepository());
-        this.customerService = new CustomerService(new CustomerRepository());
+    public ReportService(OrderService orderService,ProductService productService,CustomerService customerService){
+        this.orderService = orderService;
+        this.productService = productService;
+        this.customerService = customerService;
     }
 
     public Double getTotalAmount(){

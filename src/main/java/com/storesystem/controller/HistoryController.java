@@ -2,6 +2,7 @@ package com.storesystem.controller;
 
 import com.storesystem.model.Order;
 import com.storesystem.model.OrderItem;
+import com.storesystem.util.AppContext;
 import com.storesystem.view.HistoryPanel;
 import java.util.List;
 import java.util.ArrayList;
@@ -15,8 +16,10 @@ public class HistoryController  {
     }
 
     public List<Object[]> getAllOrders(){
-        List<Order> orders = OrderController.orderService.getAllOrders();
+//        List<Order> orders = OrderController.orderService.getAllOrders();
+        List<Order> orders = AppContext.orderService.getAllOrders();
         List<Object[]> list = new ArrayList<>();
+
         for(Order order : orders){
             Object[]row  = {
                     order.getOrderId(),
@@ -35,7 +38,7 @@ public class HistoryController  {
 
     public String deleteOrder(int orderId){
         try {
-            OrderController.orderService.deleteOrder(orderId);
+            AppContext.orderService.deleteOrder(orderId);
             return "سفارش با موفقیت حذف شد";
         }catch(Exception e){
             return "خطا: " + e.getMessage();
@@ -45,7 +48,7 @@ public class HistoryController  {
 
     public String deleteAllOrders() {
         try {
-            OrderController.orderService.deleteAllOrders();
+            AppContext.orderService.deleteAllOrders();
             return "تمامی سفارش ها با موفقیت حذف شدند";
         } catch (Exception e) {
             return "خطا: " + e.getMessage();
@@ -54,7 +57,7 @@ public class HistoryController  {
 
     public List<Object[]> getOrderItems(long orderId) {
         try {
-            Order order = OrderController.orderService.getOrderById(orderId);
+            Order order = AppContext.orderService.getOrderById(orderId);
             List<Object[]> list = new ArrayList<>();
             if (order != null && order.getOrderItems() != null) {
                 for (OrderItem item : order.getOrderItems()) {
@@ -76,15 +79,15 @@ public class HistoryController  {
     public List<Object[]> searchByDateRange(String startDate, String endDate) {
         List<Order> orders;
         if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
-            orders = OrderController.orderService.getOrdersByDateRange(startDate, endDate);
+            orders = AppContext.orderService.getOrdersByDateRange(startDate, endDate);
         } else if (startDate != null && !startDate.isEmpty()) {
-            orders = OrderController.orderService.getOrdersByDateRange(startDate, "1600/01/01");
+            orders = AppContext.orderService.getOrdersByDateRange(startDate, "1600/01/01");
         }
         else if (endDate != null && !endDate.isEmpty()) {
-            orders = OrderController.orderService.getOrdersByDateRange("1300/01/01", endDate);
+            orders = AppContext.orderService.getOrdersByDateRange("1300/01/01", endDate);
         }
         else {
-            orders = OrderController.orderService.getAllOrders();
+            orders = AppContext.orderService.getAllOrders();
         }
         return convertToTableData(orders);
     }
@@ -98,7 +101,7 @@ public class HistoryController  {
 
         try {
             long orderId = Long.parseLong(searchText.trim());
-            Order order = OrderController.orderService.getOrderById(orderId);
+            Order order = AppContext.orderService.getOrderById(orderId);
             if (order != null) {
                 results.add(order);
             }
@@ -108,7 +111,7 @@ public class HistoryController  {
 
         try {
             long customerId = Long.parseLong(searchText.trim());
-            List<Order> customerOrders = OrderController.orderService.getOrdersByCustomerId(customerId);
+            List<Order> customerOrders = AppContext.orderService.getOrdersByCustomerId(customerId);
             results.addAll(customerOrders);
         } catch (NumberFormatException e) {
             //search by CustomerId

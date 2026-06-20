@@ -4,13 +4,13 @@
     "name": "چیپس",
     "price": 50000,
     "categoryId": 1,
-    "stock": 2
+    "stock": 17
   },
   {
     "code": 768078,
     "name": "پفک",
     "price": 10000,
     "categoryId": 1,
-    "stock": 3
+    "stock": 30
   }
 ]

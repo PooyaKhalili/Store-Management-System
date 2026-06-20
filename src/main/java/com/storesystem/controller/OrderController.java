@@ -1,5 +1,6 @@
 package com.storesystem.controller;
 
+import com.storesystem.util.AppContext;
 import com.storesystem.model.Product;
 import com.storesystem.model.Customer;
 import com.storesystem.model.Category;
@@ -7,10 +8,12 @@ import com.storesystem.model.OrderItem;
 import com.storesystem.repository.CustomerRepository;
 import com.storesystem.repository.OrderRepository;
 import com.storesystem.service.OrderService;
+import com.storesystem.util.AppContext;
 import com.storesystem.util.TableUtil;
 import com.storesystem.view.OrderPanel;
 
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.*;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +22,14 @@ import static com.storesystem.util.JalaliDateUtil.getCurrentJalaliDateTime;
 
 public class OrderController {
 
-    static final OrderService orderService = new OrderService(new OrderRepository(), new CustomerRepository());
+    private OrderService orderService;
     private final OrderPanel orderPanel;
     private final DecimalFormat priceFormatter = new DecimalFormat("#,###");
+
+    public OrderController(OrderPanel orderPanel){
+        this.orderPanel = orderPanel;
+        this.orderService = AppContext.orderService;
+    }
 
     public class CartItem {
         public Product product;
@@ -39,13 +47,6 @@ public class OrderController {
 
     private List<CartItem> currentCart = new ArrayList<>();
 
-    public OrderController(OrderPanel orderPanel) {
-        this.orderPanel = orderPanel;
-    }
-
-    // ==================================================
-    // ۱. لود و جستجوی مشتریان (comboBox1)
-    // ==================================================
     public void loadCustomersIntoComboBox() {
         try {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
@@ -251,6 +252,7 @@ public class OrderController {
         orderPanel.totalSumLabel.setText("جمع کل: " + priceFormatter.format(totalSum) + " ریال");
     }
 
+
     public String checkout(String customerDetails) {
         if (currentCart.isEmpty()) {
             return "سبد خرید خالی است!";
@@ -258,7 +260,12 @@ public class OrderController {
 
         try {
             long customerId = 0;
-            if (customerDetails != null && !customerDetails.equals("مشتری گذری (عمومی)")) {
+
+            if (customerDetails != null
+                    && !customerDetails.trim().isEmpty()
+                    && !customerDetails.equals("مشتری عمومی")
+                    && !customerDetails.equals("مشتری گذری (عمومی)")) {
+
                 try {
                     String[] parts = customerDetails.split(" - ");
                     customerId = Long.parseLong(parts[0].trim());
@@ -268,13 +275,17 @@ public class OrderController {
             }
 
             List<OrderItem> orderItems = new ArrayList<>();
+            long totalAmount = 0;
+
             for (CartItem item : currentCart) {
+                long unitPrice = (long) item.product.getPrice();
                 orderItems.add(new OrderItem(
-                item.product.getCode(),
-                item.product.getName(),
-                item.quantity,
-                (long) item.product.getPrice() 
+                        item.product.getCode(),
+                        item.product.getName(),
+                        item.quantity,
+                        unitPrice
                 ));
+                totalAmount += item.getTotalPrice();
             }
 
             String orderDate = getCurrentJalaliDateTime();
@@ -283,19 +294,56 @@ public class OrderController {
                 ProductController.productService.reduceStock(item.product.getCode(), item.quantity);
             }
 
-            orderService.createOrder(customerId, orderDate, orderItems);
+            com.storesystem.model.Order newOrder = orderService.createOrder(customerId, orderDate, orderItems);
+
+            if (newOrder == null) {
+                newOrder = new com.storesystem.model.Order();
+            }
+
+            newOrder.setCustomerId(customerId);
+            newOrder.setOrderItems(orderItems);
+            newOrder.setTotalAmount(totalAmount);
+            newOrder.setOrderDate(orderDate);
+
+            boolean pdfCreated = false;
+            String pdfErrorMessage = null;
+
+            try {
+                if (AppContext.invoicePdfService == null) {
+                    throw new RuntimeException("InvoicePdfService در AppContext مقداردهی نشده است.");
+                }
+
+                File pdfFile = AppContext.invoicePdfService.generateInvoice(newOrder);
+
+                if (pdfFile != null && pdfFile.exists()) {
+                    pdfCreated = true;
+                    AppContext.invoicePdfService.openPdf(pdfFile);
+                } else {
+                    pdfErrorMessage = "PDF ساخته شد ولی فایل معتبر نیست.";
+                }
+            } catch (Exception pdfEx) {
+                pdfErrorMessage = pdfEx.getMessage();
+                System.err.println("خطا در تولید PDF:");
+                pdfEx.printStackTrace();
+            }
 
             currentCart.clear();
             refreshCartTable();
-            searchProductForOrder(null, "همه"); 
+            searchProductForOrder(null, "همه");
 
-            return "فاکتور با موفقیت ثبت و سفارش ذخیره شد.";
+            if (pdfCreated) {
+                return "فاکتور با موفقیت ثبت و نسخه PDF صادر شد.";
+            } else {
+                return "فاکتور با موفقیت ثبت شد ولی تولید PDF با خطا مواجه شد: "
+                        + (pdfErrorMessage != null ? pdfErrorMessage : "خطای نامشخص");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
             return "خطا در تسویه: " + e.getMessage();
         }
     }
+
 
     private int getCategoryIdByName(String name) {
         try {
