@@ -1,10 +1,11 @@
-package com.storesystem.service;
+package com.storesystem.config;
 
 import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.Bidi;
 import com.storesystem.model.Customer;
 import com.storesystem.model.Order;
 import com.storesystem.model.OrderItem;
+import com.storesystem.service.CustomerService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -90,11 +91,11 @@ public class InvoicePdfService {
                 float tableLeft = PAGE_MARGIN;
                 float rowHeight = 28;
 
-                float col1 = 55;   // ردیف
-                float col2 = 180;  // نام محصول
-                float col3 = 105;  // قیمت واحد
-                float col4 = 65;   // تعداد
-                float col5 = 105;  // جمع کل
+                float col1 = 55;
+                float col2 = 180;
+                float col3 = 105;
+                float col4 = 65;
+                float col5 = 105;
 
                 drawTableHeader(
                         content,
