@@ -259,13 +259,13 @@ data/
 
 # 👨‍💻 برنامه‌نویسان
 
+<div dir="ltr" align="left">
 
+* **Danesh Jafari**
+* **Pooya Khalili**
+* **MohammadHossein Sadati**
 
-**دانش جعفری**<br>
-**پویا خلیلی**<br>
-**محمد حسین ساداتی**
-
-
+</div>
 
 ---
 
