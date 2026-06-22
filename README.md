@@ -71,46 +71,24 @@ src
 
 # ⚙️ فناوری‌ها و کتابخانه‌های استفاده‌شده
 
-<table align="right">
+* **Java Swing**
+  رابط کاربری دسکتاپ
 
-<tr>
-<th>تکنولوژی</th>
-<th>کاربرد</th>
-</tr>
+* **Gson**
+  مدیریت Repository و ذخیره‌سازی اطلاعات در قالب JSON
 
-<tr>
-<td>Java Swing</td>
-<td>رابط کاربری دسکتاپ</td>
-</tr>
+* **FlatLaf**
+  ایجاد ظاهر مدرن و بهبود رابط کاربری
 
-<tr>
-<td>Gson</td>
-<td>مدیریت Repository و ذخیره‌سازی JSON</td>
-</tr>
+* **ICU4J**
+  پشتیبانی از تاریخ شمسی (جلالی)
 
-<tr>
-<td>FlatLaf</td>
-<td>ظاهر مدرن رابط کاربری</td>
-</tr>
+* **PDFBox**
+  تولید فایل PDF برای رسید مشتری
 
-<tr>
-<td>ICU4J</td>
-<td>پشتیبانی از تاریخ جلالی</td>
-</tr>
+* **SLF4J**
+  مدیریت و ثبت لاگ‌های برنامه
 
-<tr>
-<td>PDFBox</td>
-<td>تولید فایل PDF</td>
-</tr>
-
-<tr>
-<td>SLF4J</td>
-<td>مدیریت لاگ</td>
-</tr>
-
-</table>
-
-<br><br><br><br><br>
 
 ---
 
