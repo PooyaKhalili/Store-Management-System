@@ -20,7 +20,7 @@ public class SideBarPanel extends JPanel {
     private JButton purchaseHistoryButton;
     private JButton reportButton;
 
-    // ۱. تعریف پنل‌ها به صورت متغیرهای کلاس تا فقط یک بار در حافظه ساخته شوند
+
     private CategoryPanel categoryPanel;
     private ProductPanel productPanel;
     private CustomerPanel customerPanel;
@@ -112,7 +112,7 @@ public class SideBarPanel extends JPanel {
         });
     }
 
-    // متد کمکی برای جلوگیری از کدهای تکراری در تغییر استایل دکمه‌ها
+
     private void updateAllButtons(JButton activeBtn) {
         SetupUI.updateButtonStyle(categoryButton, categoryButton == activeBtn);
         SetupUI.updateButtonStyle(productButton, productButton == activeBtn);

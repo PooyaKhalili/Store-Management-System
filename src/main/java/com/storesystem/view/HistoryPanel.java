@@ -158,7 +158,7 @@ public class HistoryPanel extends JPanel {
 
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15)); // حاشیه کل صفحه
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
         add(searchPanel, BorderLayout.NORTH);
         add(splitPane, BorderLayout.CENTER);

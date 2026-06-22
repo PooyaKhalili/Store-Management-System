@@ -107,7 +107,7 @@ public class ReportPanel extends JPanel {
 
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15)); // حاشیه کل صفحه
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
         add(splitPane, BorderLayout.CENTER);
         add(footerPanel, BorderLayout.SOUTH);

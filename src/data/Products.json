@@ -4,7 +4,7 @@
     "name": "تخمه",
     "price": 35000,
     "categoryId": 1,
-    "stock": 23
+    "stock": 18
   },
   {
     "code": 933516,
@@ -25,7 +25,7 @@
     "name": "پفک",
     "price": 10000,
     "categoryId": 1,
-    "stock": 94
+    "stock": 93
   },
   {
     "code": 960006,

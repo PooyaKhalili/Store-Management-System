@@ -104,7 +104,7 @@ public class HistoryController  {
                 results.add(order);
             }
         } catch (NumberFormatException e) {
-            //search by OrderId
+            System.err.println("ورودی عددی نامعتبر: " + searchText);
         }
 
         try {
@@ -112,7 +112,7 @@ public class HistoryController  {
             List<Order> customerOrders = AppContext.orderService.getOrdersByCustomerId(customerId);
             results.addAll(customerOrders);
         } catch (NumberFormatException e) {
-            //search by CustomerId
+            System.err.println("ورودی عددی نامعتبر: " + searchText);
         }
 
         List<Order> unique = new ArrayList<>();
