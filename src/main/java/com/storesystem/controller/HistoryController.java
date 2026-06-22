@@ -2,12 +2,12 @@ package com.storesystem.controller;
 
 import com.storesystem.model.Order;
 import com.storesystem.model.OrderItem;
+import com.storesystem.util.AppContext;
 import com.storesystem.view.HistoryPanel;
 import java.util.List;
 import java.util.ArrayList;
 import java.text.DecimalFormat;
-
-public class HistoryController {
+public class HistoryController  {
     private final HistoryPanel historyPanel;
     private final DecimalFormat priceFormatter = new DecimalFormat("###,###,###");
 
@@ -15,39 +15,38 @@ public class HistoryController {
         this.historyPanel = historyPanel;
     }
 
-    public List<Object[]> getAllOrders() {
-        List<Order> orders = OrderController.orderService.getAllOrders();
+    public List<Object[]> getAllOrders(){
+        List<Order> orders = AppContext.orderService.getAllOrders();
         List<Object[]> list = new ArrayList<>();
-        for (Order order : orders) {
-            long subtotal = order.getTotalAmount();
-            long total = subtotal;
-
-            Object[] row = {
+        for(Order order : orders){
+            Object[]row  = {
                     order.getOrderId(),
                     order.getCustomerId(),
                     order.getOrderDate(),
-                    priceFormatter.format(subtotal),
+                    order.getTotalAmount(),
+                    priceFormatter.format(order.getTotalAmount()),
                     "0",
                     "0",
-                    priceFormatter.format(total)
+                    priceFormatter.format(order.getTotalAmount())
             };
             list.add(row);
         }
         return list;
     }
 
-    public String deleteOrder(int orderId) {
+    public String deleteOrder(int orderId){
         try {
-            OrderController.orderService.deleteOrder(orderId);
+            AppContext.orderService.deleteOrder(orderId);
             return "سفارش با موفقیت حذف شد";
-        } catch (Exception e) {
+        }catch(Exception e){
             return "خطا: " + e.getMessage();
         }
+
     }
 
     public String deleteAllOrders() {
         try {
-            OrderController.orderService.deleteAllOrders();
+            AppContext.orderService.deleteAllOrders();
             return "تمامی سفارش ها با موفقیت حذف شدند";
         } catch (Exception e) {
             return "خطا: " + e.getMessage();
@@ -56,7 +55,7 @@ public class HistoryController {
 
     public List<Object[]> getOrderItems(long orderId) {
         try {
-            Order order = OrderController.orderService.getOrderById(orderId);
+            Order order = AppContext.orderService.getOrderById(orderId);
             List<Object[]> list = new ArrayList<>();
             if (order != null && order.getOrderItems() != null) {
                 for (OrderItem item : order.getOrderItems()) {
@@ -78,13 +77,15 @@ public class HistoryController {
     public List<Object[]> searchByDateRange(String startDate, String endDate) {
         List<Order> orders;
         if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
-            orders = OrderController.orderService.getOrdersByDateRange(startDate, endDate);
+            orders = AppContext.orderService.getOrdersByDateRange(startDate, endDate);
         } else if (startDate != null && !startDate.isEmpty()) {
-            orders = OrderController.orderService.getOrdersByDateRange(startDate, "1600/01/01");
-        } else if (endDate != null && !endDate.isEmpty()) {
-            orders = OrderController.orderService.getOrdersByDateRange("1300/01/01", endDate);
-        } else {
-            orders = OrderController.orderService.getAllOrders();
+            orders = AppContext.orderService.getOrdersByDateRange(startDate, "1600/01/01");
+        }
+        else if (endDate != null && !endDate.isEmpty()) {
+            orders = AppContext.orderService.getOrdersByDateRange("1300/01/01", endDate);
+        }
+        else {
+            orders = AppContext.orderService.getAllOrders();
         }
         return convertToTableData(orders);
     }
@@ -98,20 +99,20 @@ public class HistoryController {
 
         try {
             long orderId = Long.parseLong(searchText.trim());
-            Order order = OrderController.orderService.getOrderById(orderId);
+            Order order = AppContext.orderService.getOrderById(orderId);
             if (order != null) {
                 results.add(order);
             }
         } catch (NumberFormatException e) {
-            // search by OrderId
+            //search by OrderId
         }
 
         try {
             long customerId = Long.parseLong(searchText.trim());
-            List<Order> customerOrders = OrderController.orderService.getOrdersByCustomerId(customerId);
+            List<Order> customerOrders = AppContext.orderService.getOrdersByCustomerId(customerId);
             results.addAll(customerOrders);
         } catch (NumberFormatException e) {
-            // search by CustomerId
+            //search by CustomerId
         }
 
         List<Order> unique = new ArrayList<>();
@@ -127,19 +128,15 @@ public class HistoryController {
     public List<Object[]> convertToTableData(List<Order> orders) {
         List<Object[]> list = new ArrayList<>();
         for (Order order : orders) {
-            long subtotal = order.getTotalAmount();
-            long tax = 0;
-            long discount = 0;
-            long total = subtotal - discount + tax;
-
             Object[] row = {
                     order.getOrderId(),
                     order.getCustomerId(),
                     order.getOrderDate(),
-                    priceFormatter.format(subtotal),
-                    String.valueOf(discount),
-                    String.valueOf(tax),
-                    priceFormatter.format(total)
+                    order.getTotalAmount(),
+                    priceFormatter.format(order.getTotalAmount()),
+                    "0",
+                    "0",
+                    priceFormatter.format(order.getTotalAmount())
             };
             list.add(row);
         }

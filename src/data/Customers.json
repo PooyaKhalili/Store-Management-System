@@ -4,8 +4,8 @@
     "firstName": "محمدحسین",
     "lastName": "ساداتی",
     "phoneNumber": "09029328473",
-    "buyCount": 0,
-    "totalPaid": 0,
+    "buyCount": 22,
+    "totalPaid": 27544000,
     "registeredDate": "1405/03/29 18:02"
   },
   {
@@ -13,8 +13,8 @@
     "firstName": "پویا",
     "lastName": "خلیلی",
     "phoneNumber": "09115437646",
-    "buyCount": 0,
-    "totalPaid": 0,
+    "buyCount": 2,
+    "totalPaid": 70000,
     "registeredDate": "1405/03/29 18:03"
   },
   {
@@ -22,8 +22,17 @@
     "firstName": "علی",
     "lastName": "احمدی",
     "phoneNumber": "09111858473",
-    "buyCount": 0,
-    "totalPaid": 0,
+    "buyCount": 7,
+    "totalPaid": 650000,
     "registeredDate": "1405/03/29 18:04"
+  },
+  {
+    "id": 4,
+    "firstName": "دانش",
+    "lastName": "جعفری",
+    "phoneNumber": "09111234567",
+    "buyCount": 1,
+    "totalPaid": 35000,
+    "registeredDate": "1405/03/31 15:50"
   }
 ]

@@ -1,16 +1,14 @@
 package com.storesystem.controller;
 
-import com.storesystem.model.Product;
-import com.storesystem.model.Customer;
-import com.storesystem.model.Category;
-import com.storesystem.model.OrderItem;
-import com.storesystem.repository.CustomerRepository;
-import com.storesystem.repository.OrderRepository;
+import com.storesystem.model.*;
+import com.storesystem.config.InvoicePdfService;
+import com.storesystem.util.AppContext;
 import com.storesystem.service.OrderService;
 import com.storesystem.util.TableUtil;
 import com.storesystem.view.OrderPanel;
 
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.*;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +17,14 @@ import static com.storesystem.util.JalaliDateUtil.getCurrentJalaliDateTime;
 
 public class OrderController {
 
-    static final OrderService orderService = new OrderService(new OrderRepository(), new CustomerRepository());
+    private OrderService orderService;
     private final OrderPanel orderPanel;
     private final DecimalFormat priceFormatter = new DecimalFormat("#,###");
+
+    public OrderController(OrderPanel orderPanel){
+        this.orderPanel = orderPanel;
+        this.orderService = AppContext.orderService;
+    }
 
     public class CartItem {
         public Product product;
@@ -39,13 +42,6 @@ public class OrderController {
 
     private List<CartItem> currentCart = new ArrayList<>();
 
-    public OrderController(OrderPanel orderPanel) {
-        this.orderPanel = orderPanel;
-    }
-
-    // ==================================================
-    // ۱. لود و جستجوی مشتریان (comboBox1)
-    // ==================================================
     public void loadCustomersIntoComboBox() {
         try {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
@@ -173,19 +169,15 @@ public class OrderController {
                     break;
                 }
             }
-
             int totalRequestedQuantity = quantity + (existingItem != null ? existingItem.quantity : 0);
-
             if (!ProductController.productService.hasSufficientStock(productCode, totalRequestedQuantity)) {
                 return "موجودی انبار کافی نیست! (موجودی فعلی: " + product.getStock() + ")";
             }
-
             if (existingItem != null) {
                 existingItem.quantity = totalRequestedQuantity;
             } else {
                 currentCart.add(new CartItem(product, quantity));
             }
-
             refreshCartTable();
             return "کالا به سبد خرید اضافه شد";
         } catch (Exception e) {
@@ -251,51 +243,103 @@ public class OrderController {
         orderPanel.totalSumLabel.setText("جمع کل: " + priceFormatter.format(totalSum) + " ریال");
     }
 
+
     public String checkout(String customerDetails) {
         if (currentCart.isEmpty()) {
             return "سبد خرید خالی است!";
         }
 
         try {
-            long customerId = 0;
-            if (customerDetails != null && !customerDetails.equals("مشتری گذری (عمومی)")) {
-                try {
-                    String[] parts = customerDetails.split(" - ");
-                    customerId = Long.parseLong(parts[0].trim());
-                } catch (Exception e) {
-                    return "فرمت مشتری انتخاب شده نامعتبر است.";
+            if (customerDetails == null || customerDetails.trim().isEmpty()) {
+                return "لطفاً مشتری را انتخاب کنید!";
+            }
+            long customerId;
+
+            if (customerDetails.equals("مشتری عمومی")) {
+                customerId = 1;
+            } else {
+                String idPart = customerDetails.split("-")[0].trim();
+                customerId = Long.parseLong(idPart);
+            }
+
+            for (CartItem item : currentCart) {
+                if (!ProductController.productService.hasSufficientStock(
+                        item.product.getCode(),
+                        item.quantity
+                )) {
+                    return "موجودی کالا «" + item.product.getName() + "» کافی نیست!";
                 }
             }
 
             List<OrderItem> orderItems = new ArrayList<>();
+
             for (CartItem item : currentCart) {
                 orderItems.add(new OrderItem(
-                item.product.getCode(),
-                item.product.getName(),
-                item.quantity,
-                (long) item.product.getPrice() 
+                        item.product.getCode(),
+                        item.product.getName(),
+                        item.quantity,
+                        (long) item.product.getPrice()
                 ));
             }
 
             String orderDate = getCurrentJalaliDateTime();
 
             for (CartItem item : currentCart) {
-                ProductController.productService.reduceStock(item.product.getCode(), item.quantity);
+                ProductController.productService.reduceStock(
+                        item.product.getCode(),
+                        item.quantity
+                );
             }
 
-            orderService.createOrder(customerId, orderDate, orderItems);
+            Order newOrder = orderService.createOrder(customerId, orderDate, orderItems);
+
+            if (newOrder == null) {
+                return "سفارش ثبت نشد!";
+            }
+            InvoicePdfService invoicePdfService =
+                    new InvoicePdfService(CustomerController.customerService);
+            File pdfFile;
+            try {
+                pdfFile = invoicePdfService.generateInvoice(newOrder);
+            } catch (Exception pdfException) {
+                pdfException.printStackTrace();
+                return "سفارش ثبت شد، اما خطا در ساخت PDF: "
+                        + (pdfException.getMessage() != null ? pdfException.getMessage() : "خطای نامشخص");
+            }
+
+            if (pdfFile == null || !pdfFile.exists() || pdfFile.length() == 0) {
+                return "سفارش ثبت شد، اما فایل PDF ساخته نشد یا فایل خالی است.";
+            }
+
+            try {
+                invoicePdfService.openPdf(pdfFile);
+            } catch (Exception openException) {
+                openException.printStackTrace();
+
+                currentCart.clear();
+                refreshCartTable();
+
+                return "فاکتور ساخته شد، اما باز نشد.\nمسیر فایل: "
+                        + pdfFile.getAbsolutePath();
+            }
 
             currentCart.clear();
             refreshCartTable();
-            searchProductForOrder(null, "همه"); 
 
-            return "فاکتور با موفقیت ثبت و سفارش ذخیره شد.";
+            return "فاکتور با موفقیت ثبت شد و PDF ساخته شد.\nمسیر فایل: "
+                    + pdfFile.getAbsolutePath();
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "فرمت اطلاعات مشتری نامعتبر است!";
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "خطا در تسویه: " + e.getMessage();
+            return e.getMessage() != null ? e.getMessage() : "خطای سیستمی در ثبت فاکتور!";
         }
     }
+
+
 
     private int getCategoryIdByName(String name) {
         try {
