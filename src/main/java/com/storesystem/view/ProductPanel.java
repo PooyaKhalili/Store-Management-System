@@ -402,6 +402,15 @@ private void addActionListeners() {
             int result = fileChooser.showOpenDialog(this);
             if(result == JFileChooser.APPROVE_OPTION){
                 File selectedFile = fileChooser.getSelectedFile();
+                String fileName = selectedFile.getName();
+                if (!fileName.toLowerCase().endsWith(".csv")) {
+                    UIManager.put("OptionPane.messageFont", vazirFont);
+                    JOptionPane.showMessageDialog(this,
+                            "فایل انتخاب شده دارای فرمت نامعتبر می باشد!",
+                            "خطا",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 String response = controller.importFromCsv(selectedFile.getAbsolutePath());
                 if (response.contains("خطا")) {
                     JOptionPane.showMessageDialog(this, response, "خطا", JOptionPane.ERROR_MESSAGE);
@@ -417,17 +426,21 @@ private void addActionListeners() {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("ذخیره فایل CSV");
             fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("CSV Files", "csv"));
+            fileChooser.setAcceptAllFileFilterUsed(false);
             fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/Desktop"));
             fileChooser.setSelectedFile(new File("productsExport.csv"));
 
             int result = fileChooser.showSaveDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
+                String fileName = selectedFile.getName();
                 String filePath = selectedFile.getAbsolutePath();
 
                 if (!filePath.toLowerCase().endsWith(".csv")) {
                     filePath += ".csv";
+                    JOptionPane.showMessageDialog(this, "فرمت فایل نادرست می باشد، فرمت به طور اتوماتیک تصحیح شد!", "اطلاعیه", JOptionPane.INFORMATION_MESSAGE);
                 }
+
 
                 String response = controller.exportToCsv(filePath);
 
