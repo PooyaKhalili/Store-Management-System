@@ -1,5 +1,6 @@
 package com.storesystem.controller;
 
+import com.storesystem.config.InvoiceTxtService;
 import com.storesystem.model.*;
 import com.storesystem.config.InvoicePdfService;
 import com.storesystem.util.AppContext;
@@ -296,9 +297,14 @@ public class OrderController {
             if (newOrder == null) {
                 return "سفارش ثبت نشد!";
             }
-            InvoicePdfService invoicePdfService =
-                    new InvoicePdfService(CustomerController.customerService);
+
+            InvoicePdfService invoicePdfService = new InvoicePdfService(CustomerController.customerService);
             File pdfFile;
+
+            InvoiceTxtService txtService = new InvoiceTxtService(CustomerController.customerService);
+            File txtFile = txtService.generateInvoice(newOrder);
+
+
             try {
                 pdfFile = invoicePdfService.generateInvoice(newOrder);
             } catch (Exception pdfException) {
@@ -332,7 +338,6 @@ public class OrderController {
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return "فرمت اطلاعات مشتری نامعتبر است!";
-
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage() != null ? e.getMessage() : "خطای سیستمی در ثبت فاکتور!";
