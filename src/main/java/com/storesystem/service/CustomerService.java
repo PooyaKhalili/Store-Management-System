@@ -38,9 +38,14 @@ public class CustomerService {
     }
 
     public Customer getCustomerById(int id) {
+        if(id<=0){
+            return null;
+        }
         Customer customer = customerRepository.findCustomerById(id);
-        if (customer == null)
-            throw new IllegalArgumentException("Customer not found");
+        if (customer == null) {
+            System.err.println("Customer with id " + id + " not found");
+            return null;
+        }
         return customer;
     }
 

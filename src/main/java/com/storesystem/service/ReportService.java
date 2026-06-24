@@ -65,6 +65,7 @@ public class ReportService {
         List<Order> orders = orderService.getAllOrders();
         for(var order : orders){
             long customerId = order.getCustomerId();
+            if (customerId <= 0) continue;
             Customer customer = customerService.getCustomerById((int)customerId);
             if(customer==null) continue;
             String customerName = customer.getFirstName() + " " + customer.getLastName();
