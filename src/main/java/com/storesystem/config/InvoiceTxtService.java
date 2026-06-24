@@ -5,6 +5,7 @@ import com.storesystem.model.Order;
 import com.storesystem.model.OrderItem;
 import com.storesystem.service.CustomerService;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
@@ -114,5 +115,17 @@ public class InvoiceTxtService {
         }
 
         return text.substring(0, maxLength - 3) + "...";
+    }
+
+    public void openTxt(File file) throws Exception {
+    if (file == null || !file.exists()) {
+        throw new RuntimeException("فایل TXT پیدا نشد.");
+    }
+
+    if (!Desktop.isDesktopSupported()) {
+        throw new RuntimeException("باز کردن فایل TXT در این سیستم پشتیبانی نمی‌شود.");
+    }
+
+    Desktop.getDesktop().open(file);
     }
 }

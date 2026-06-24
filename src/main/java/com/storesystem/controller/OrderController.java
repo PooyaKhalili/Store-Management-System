@@ -257,7 +257,7 @@ public class OrderController {
             long customerId;
 
             if (customerDetails.equals("مشتری عمومی")) {
-                customerId = 1;
+                customerId = 0;
             } else {
                 String idPart = customerDetails.split("-")[0].trim();
                 customerId = Long.parseLong(idPart);
@@ -297,6 +297,39 @@ public class OrderController {
             if (newOrder == null) {
                 return "سفارش ثبت نشد!";
             }
+            currentCart.clear();
+            refreshCartTable();
+            if (JOptionPane.showConfirmDialog(orderPanel, "آیا مایل به دریافت فاکتور هستید؟", "دریافت فاکتور", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                Object[] options = {"PDF", "Txt"};
+                int result = JOptionPane.showOptionDialog(
+                    orderPanel,
+                    "فرمت فاکتور را انتخاب کنید:",
+                    "انتخاب فرمت فاکتور",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+                );
+                if (result == 0) {
+                    currentCart.clear();
+                    refreshCartTable();
+                    return pdfInvoice(newOrder);
+                }
+                if (result == 1) {
+                    currentCart.clear();
+                    refreshCartTable();
+                    return txtInvoice(newOrder);
+                }
+            }
+        return "سفارش با موفقیت ثبت شد!";
+        } catch (Exception e) { 
+            return e.getMessage();
+        }
+    }
+
+    public String pdfInvoice(Order newOrder) {
+        try {
 
             InvoicePdfService invoicePdfService = new InvoicePdfService(CustomerController.customerService);
             File pdfFile;
@@ -334,9 +367,8 @@ public class OrderController {
 
             return "فاکتور با موفقیت ثبت شد و PDF ساخته شد.\nمسیر فایل: "
                     + pdfFile.getAbsolutePath();
-
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        } catch (NumberFormatException er) {
+            er.printStackTrace();
             return "فرمت اطلاعات مشتری نامعتبر است!";
         } catch (Exception e) {
             e.printStackTrace();
@@ -344,7 +376,37 @@ public class OrderController {
         }
     }
 
+        public String txtInvoice(Order newOrder) {
+        try {
 
+            InvoiceTxtService txtService = new InvoiceTxtService(CustomerController.customerService);
+            File txtFile = txtService.generateInvoice(newOrder);
+
+            try {
+                txtService.openTxt(txtFile);
+            } catch (Exception openException) {
+                openException.printStackTrace();
+
+                currentCart.clear();
+                refreshCartTable();
+
+                return "فاکتور ساخته شد، اما باز نشد.\nمسیر فایل: "
+                        + txtFile.getAbsolutePath();
+            }
+
+            currentCart.clear();
+            refreshCartTable();
+
+            return "فاکتور با موفقیت ثبت شد و TXT ساخته شد.\nمسیر فایل: "
+                    + txtFile.getAbsolutePath();
+        } catch (NumberFormatException er) {
+            er.printStackTrace();
+            return "فرمت اطلاعات مشتری نامعتبر است!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage() != null ? e.getMessage() : "خطای سیستمی در ثبت فاکتور!";
+        }
+    }
 
     private int getCategoryIdByName(String name) {
         try {

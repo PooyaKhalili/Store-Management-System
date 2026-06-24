@@ -388,17 +388,21 @@ private void creatSearchPanel() {
 
         payButton.addActionListener(e -> {
             if (controller == null) return;
+            String message=null;
             String customerDetails = comboBox1.getSelectedItem().toString();
             UIManager.put("OptionPane.messageFont", vazirFont);
             UIManager.put("Button.font", vazirFont);
             if (JOptionPane.showConfirmDialog(this, "آیا از ثبت نهایی این فاکتور اطمینان دارید؟", "تسویه حساب 💳", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 String msg = controller.checkout(customerDetails);
+                message=msg;
                 if (msg.contains("موفقیت")) {
                     JOptionPane.showMessageDialog(this, msg, "عملیات موفق", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this, msg, "خطا", JOptionPane.ERROR_MESSAGE);
                 }
             }
+            refreshButton.doClick();
+
         });
 
         refreshButton.addActionListener(e -> {
