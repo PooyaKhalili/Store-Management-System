@@ -42,7 +42,7 @@ public static JButton createButton(Color bgColor, String text) {
         button.setBackground(Color.WHITE); 
         button.setForeground(new Color(80, 80, 80)); 
         
-        button.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 19)); // 19 = 15 + 4(ضخامت خط) تا متن‌ها در یک راستا بمانند
+        button.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 19));
     
         button.putClientProperty("FlatLaf.style", "borderWidth: 0; focusWidth: 0;");
     }

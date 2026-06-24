@@ -1,1 +1,198 @@
-[]
+[
+  {
+    "code": 643913,
+    "name": "تخمه",
+    "price": 35000,
+    "categoryId": 1,
+    "stock": 16
+  },
+  {
+    "code": 933516,
+    "name": "خرما",
+    "price": 450000,
+    "categoryId": 2,
+    "stock": 90
+  },
+  {
+    "code": 753480,
+    "name": "چیپس",
+    "price": 50000,
+    "categoryId": 1,
+    "stock": 13
+  },
+  {
+    "code": 768078,
+    "name": "پفک",
+    "price": 10000,
+    "categoryId": 1,
+    "stock": 86
+  },
+  {
+    "code": 960006,
+    "name": "شلیل",
+    "price": 80000,
+    "categoryId": 2,
+    "stock": 94
+  },
+  {
+    "code": 970310,
+    "name": "لبو",
+    "price": 35000,
+    "categoryId": 2,
+    "stock": 994
+  },
+  {
+    "code": 746752,
+    "name": "سیب",
+    "price": 10000,
+    "categoryId": 2,
+    "stock": 42
+  },
+  {
+    "code": 602885,
+    "name": "بستنی",
+    "price": 100000,
+    "categoryId": 1,
+    "stock": 44
+  },
+  {
+    "code": 548998,
+    "name": "یخ در بهشت",
+    "price": 700000,
+    "categoryId": 1,
+    "stock": 44
+  },
+  {
+    "code": 926912,
+    "name": "ازگیل",
+    "price": 650000,
+    "categoryId": 1,
+    "stock": 94
+  },
+  {
+    "code": 222860,
+    "name": "هویج",
+    "price": 600000,
+    "categoryId": 2,
+    "stock": 94
+  },
+  {
+    "code": 944129,
+    "name": "گریپ فروت",
+    "price": 1000,
+    "categoryId": 2,
+    "stock": 5
+  },
+  {
+    "code": 529048,
+    "name": "خیار",
+    "price": 1000,
+    "categoryId": 2,
+    "stock": 94
+  },
+  {
+    "code": 509270,
+    "name": "انگور",
+    "price": 1350000,
+    "categoryId": 2,
+    "stock": 994
+  },
+  {
+    "code": 813139,
+    "name": "پفیلا",
+    "price": 40000,
+    "categoryId": 1,
+    "stock": 94
+  },
+  {
+    "code": 909293,
+    "name": "هلو",
+    "price": 900000,
+    "categoryId": 2,
+    "stock": 42
+  },
+  {
+    "code": 761834,
+    "name": "زردآلو",
+    "price": 500000,
+    "categoryId": 2,
+    "stock": 44
+  },
+  {
+    "code": 516195,
+    "name": "لواشک",
+    "price": 30000,
+    "categoryId": 1,
+    "stock": 44
+  },
+  {
+    "code": 741934,
+    "name": "انار",
+    "price": 10000,
+    "categoryId": 2,
+    "stock": 2
+  },
+  {
+    "code": 253994,
+    "name": "یخمک",
+    "price": 60000,
+    "categoryId": 1,
+    "stock": 94
+  },
+  {
+    "code": 808383,
+    "name": "نوشمک",
+    "price": 12000,
+    "categoryId": 1,
+    "stock": 94
+  },
+  {
+    "code": 177841,
+    "name": "موز",
+    "price": 650000,
+    "categoryId": 2,
+    "stock": 94
+  },
+  {
+    "code": 924920,
+    "name": "خربزه",
+    "price": 9500000,
+    "categoryId": 2,
+    "stock": 94
+  },
+  {
+    "code": 743090,
+    "name": "پرتغال",
+    "price": 10000,
+    "categoryId": 2,
+    "stock": 94
+  },
+  {
+    "code": 422463,
+    "name": "آلو",
+    "price": 8500000,
+    "categoryId": 1,
+    "stock": 94
+  },
+  {
+    "code": 662960,
+    "name": "هندوانه",
+    "price": 1200000,
+    "categoryId": 2,
+    "stock": 94
+  },
+  {
+    "code": 473147,
+    "name": "کیوی",
+    "price": 550000,
+    "categoryId": 2,
+    "stock": 89
+  },
+  {
+    "code": 626358,
+    "name": "انبه",
+    "price": 10000,
+    "categoryId": 2,
+    "stock": 94
+  }
+]

@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import com.storesystem.config.SetupUI;
 import com.storesystem.util.TableUtil;
+import com.storesystem.controller.ReportController;
 
 public class ReportPanel extends JPanel {
 
@@ -32,10 +33,13 @@ public class ReportPanel extends JPanel {
     private JSplitPane splitPane;
     private int total=0;
 
+    private final ReportController controller;
+
     public ReportPanel() {
         initComponents();
         createFooterPanel();
         setupLayout();
+        controller = new ReportController(this);
     }
 
     private void initComponents() {
@@ -103,9 +107,26 @@ public class ReportPanel extends JPanel {
 
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15)); // حاشیه کل صفحه
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
         add(splitPane, BorderLayout.CENTER);
         add(footerPanel, BorderLayout.SOUTH);
+    }
+
+
+    public JPanel getTopTable(){
+        return topTable;
+    }
+
+    public JPanel getBottomTable(){
+        return bottomTable;
+    }
+
+    public void setTotalRevenue(int total){
+        totalRevenueLabel.setText( "درآمد کل:" + total + "ریال");
+    }
+
+    public JButton getRefreshButton(){
+        return refreshButton;
     }
 }
