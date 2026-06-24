@@ -4,7 +4,10 @@ import com.storesystem.config.InvoiceTxtService;
 import com.storesystem.model.*;
 import com.storesystem.config.InvoicePdfService;
 import com.storesystem.util.AppContext;
+import com.storesystem.service.CategoryService;
+import com.storesystem.service.CustomerService;
 import com.storesystem.service.OrderService;
+import com.storesystem.service.ProductService;
 import com.storesystem.util.TableUtil;
 import com.storesystem.view.OrderPanel;
 
@@ -19,12 +22,18 @@ import static com.storesystem.util.JalaliDateUtil.getCurrentJalaliDateTime;
 public class OrderController {
 
     private OrderService orderService;
+    private CustomerService customerService;
+    private CategoryService categoryService;
+    private ProductService productService;
     private final OrderPanel orderPanel;
     private final DecimalFormat priceFormatter = new DecimalFormat("#,###");
 
     public OrderController(OrderPanel orderPanel){
         this.orderPanel = orderPanel;
         this.orderService = AppContext.orderService;
+        this.customerService=AppContext.customerService;
+        this.categoryService=AppContext.categoryService;
+        this.productService=AppContext.productService;
     }
 
     public class CartItem {
@@ -48,7 +57,7 @@ public class OrderController {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             model.addElement("مشتری عمومی"); 
 
-            List<Customer> customers = CustomerController.customerService.getAllCustomers();
+            List<Customer> customers = customerService.getAllCustomers();
             if (customers != null) {
                 for (Customer customer : customers) {
                     model.addElement(customer.getId() + " - " + customer.getFirstName() + " " + customer.getLastName() + " - " + customer.getPhoneNumber());
@@ -67,9 +76,9 @@ public class OrderController {
 
             List<Customer> customers = new ArrayList<>();
             if (text != null && !text.trim().isEmpty()) {
-                if (CustomerController.customerService.searchByFirstName(text) != null) customers.addAll(CustomerController.customerService.searchByFirstName(text));
-                if (CustomerController.customerService.searchByLastName(text) != null) customers.addAll(CustomerController.customerService.searchByLastName(text));
-                if (CustomerController.customerService.searchByPhone(text) != null) customers.addAll(CustomerController.customerService.searchByPhone(text));
+                if (customerService.searchByFirstName(text) != null) customers.addAll(customerService.searchByFirstName(text));
+                if (customerService.searchByLastName(text) != null) customers.addAll(customerService.searchByLastName(text));
+                if (customerService.searchByPhone(text) != null) customers.addAll(customerService.searchByPhone(text));
                 
                 List<Customer> unique = new ArrayList<>();
                 for (Customer c : customers) {
@@ -96,7 +105,7 @@ public class OrderController {
         try {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             model.addElement("همه");
-            List<Category> categories = CategoryController.categoryService.getAllCategories();
+            List<Category> categories = categoryService.getAllCategories();
             if (categories != null) {
                 for (Category category : categories) {
                     model.addElement(category.getName());
@@ -113,10 +122,10 @@ public class OrderController {
 
         if (text != null && !text.trim().isEmpty()) {
             List<Product> allResults = new ArrayList<>();
-            if (ProductController.productService.searchProductsByName(text) != null) allResults.addAll(ProductController.productService.searchProductsByName(text));
+            if (productService.searchProductsByName(text) != null) allResults.addAll(productService.searchProductsByName(text));
             try {
                 long code = Long.parseLong(text.trim());
-                Product productByCode = ProductController.productService.getProductByCode(code);
+                Product productByCode = productService.getProductByCode(code);
                 if (productByCode != null) allResults.add(productByCode);
             } catch (Exception e) {}
 
@@ -128,8 +137,8 @@ public class OrderController {
                 if (!isDuplicate) uniqueProducts.add(currentProduct);
             }
         } else {
-            if (ProductController.productService.getAllProducts() != null) {
-                uniqueProducts.addAll(ProductController.productService.getAllProducts());
+            if (productService.getAllProducts() != null) {
+                uniqueProducts.addAll(productService.getAllProducts());
             }
         }
 
@@ -160,7 +169,7 @@ public class OrderController {
         if (quantity <= 0) return "تعداد باید بیشتر از صفر باشد!";
         
         try {
-            Product product = ProductController.productService.getProductByCode(productCode);
+            Product product = productService.getProductByCode(productCode);
             if (product == null) return "کالا یافت نشد!";
 
             CartItem existingItem = null;
@@ -171,7 +180,7 @@ public class OrderController {
                 }
             }
             int totalRequestedQuantity = quantity + (existingItem != null ? existingItem.quantity : 0);
-            if (!ProductController.productService.hasSufficientStock(productCode, totalRequestedQuantity)) {
+            if (!productService.hasSufficientStock(productCode, totalRequestedQuantity)) {
                 return "موجودی انبار کافی نیست! (موجودی فعلی: " + product.getStock() + ")";
             }
             if (existingItem != null) {
@@ -191,7 +200,7 @@ public class OrderController {
         if (newQuantity <= 0) return "تعداد باید بیشتر از صفر باشد!";
 
         try {
-            if (!ProductController.productService.hasSufficientStock(productCode, newQuantity)) {
+            if (!productService.hasSufficientStock(productCode, newQuantity)) {
                 return "موجودی انبار کافی نیست!";
             }
 
@@ -264,7 +273,7 @@ public class OrderController {
             }
 
             for (CartItem item : currentCart) {
-                if (!ProductController.productService.hasSufficientStock(
+                if (!productService.hasSufficientStock(
                         item.product.getCode(),
                         item.quantity
                 )) {
@@ -276,19 +285,19 @@ public class OrderController {
 
             for (CartItem item : currentCart) {
                 orderItems.add(new OrderItem(
-                        item.product.getCode(),
-                        item.product.getName(),
-                        item.quantity,
-                        (long) item.product.getPrice()
+                    item.product.getCode(),
+                    item.product.getName(),
+                    item.quantity,
+                    (long) item.product.getPrice()
                 ));
             }
 
             String orderDate = getCurrentJalaliDateTime();
 
             for (CartItem item : currentCart) {
-                ProductController.productService.reduceStock(
-                        item.product.getCode(),
-                        item.quantity
+                    productService.reduceStock(
+                    item.product.getCode(),
+                    item.quantity
                 );
             }
 
@@ -331,10 +340,10 @@ public class OrderController {
     public String pdfInvoice(Order newOrder) {
         try {
 
-            InvoicePdfService invoicePdfService = new InvoicePdfService(CustomerController.customerService);
+            InvoicePdfService invoicePdfService = new InvoicePdfService(customerService);
             File pdfFile;
 
-            InvoiceTxtService txtService = new InvoiceTxtService(CustomerController.customerService);
+            InvoiceTxtService txtService = new InvoiceTxtService(customerService);
             File txtFile = txtService.generateInvoice(newOrder);
 
 
@@ -379,7 +388,7 @@ public class OrderController {
         public String txtInvoice(Order newOrder) {
         try {
 
-            InvoiceTxtService txtService = new InvoiceTxtService(CustomerController.customerService);
+            InvoiceTxtService txtService = new InvoiceTxtService(customerService);
             File txtFile = txtService.generateInvoice(newOrder);
 
             try {
@@ -410,7 +419,7 @@ public class OrderController {
 
     private int getCategoryIdByName(String name) {
         try {
-            for (Category category : CategoryController.categoryService.getAllCategories()) {
+            for (Category category : categoryService.getAllCategories()) {
                 if (category.getName().equals(name)) return category.getId();
             }
         } catch (Exception e) {}
@@ -419,7 +428,7 @@ public class OrderController {
 
     private String getCategoryNameById(int id) {
         try {
-            Category category = CategoryController.categoryService.getCategoryById(id);
+            Category category = categoryService.getCategoryById(id);
             if (category != null) return category.getName();
         } catch (Exception e) {}
         return "نامشخص";

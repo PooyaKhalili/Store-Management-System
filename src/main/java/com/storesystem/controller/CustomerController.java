@@ -1,8 +1,8 @@
 package com.storesystem.controller;
 
 import com.storesystem.model.Customer;
-import com.storesystem.repository.CustomerRepository;
 import com.storesystem.service.CustomerService;
+import com.storesystem.util.AppContext;
 import com.storesystem.util.TableUtil;
 import com.storesystem.view.CustomerPanel;
 import java.util.List;
@@ -10,11 +10,12 @@ import java.util.ArrayList;
 
 public class CustomerController {
 
-    static final CustomerService customerService= new CustomerService(new CustomerRepository());
+    final CustomerService customerService;
     private final CustomerPanel customerPanel;
 
     public CustomerController(CustomerPanel customerPanel) {
         this.customerPanel = customerPanel;
+        this.customerService=AppContext.customerService;
     }
 
     public String addCustomer(String firstName, String lastName, String phoneNumber){
