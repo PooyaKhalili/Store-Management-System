@@ -155,4 +155,13 @@ public class HistoryController  {
         List<Object[]> items = getOrderItems(orderId);
         historyPanel.refreshBottomTable(items);
     }
+
+    public Order getOrderById(long orderId) {
+        try {
+            return AppContext.orderService.getOrderById(orderId);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

@@ -13,6 +13,8 @@ import javax.swing.*;
 
 import com.storesystem.config.SetupUI;
 import com.storesystem.controller.HistoryController;
+import com.storesystem.controller.OrderController;
+import com.storesystem.model.Order;
 import com.storesystem.util.JalaliDatePickerDialog;
 import com.storesystem.util.TableUtil;
 import java.awt.Window;
@@ -200,9 +202,48 @@ public class HistoryPanel extends JPanel {
         
         });
         btnPrintReceipt.addActionListener(e -> {
-        
+            JTable topTable = TableUtil.getTableFromPanel(topTablePanel);
+            if (topTable != null && topTable.getSelectedRow() >= 0) {
+                long orderId = Long.parseLong(topTable.getValueAt(topTable.getSelectedRow(), 0).toString());
+                int confirm = JOptionPane.showConfirmDialog(this,
+                         "آیا فاکتور این خرید را می خواهید؟",
+                        "دریافت فاکتور",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    OrderController orderController = new OrderController(null);
+                    Order order = controller.getOrderById(orderId);
+                    if (order != null) {
+                        orderController.txtInvoice(order);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "سفارش یافت نشد!", "خطا", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "لطفا ابتدا یک سفارش را انتخاب کنید!", "خطا", JOptionPane.ERROR_MESSAGE);
+            }
         });
         btnExportPDF.addActionListener(e -> {
+            JTable topTable = TableUtil.getTableFromPanel(topTablePanel);
+            if (topTable != null && topTable.getSelectedRow() >= 0) {
+                long orderId = Long.parseLong(topTable.getValueAt(topTable.getSelectedRow(), 0).toString());
+                int confirm = JOptionPane.showConfirmDialog(this,
+                         "آیا فاکتور این خرید را می خواهید؟",
+                        "دریافت فاکتور",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    OrderController orderController = new OrderController(null);
+                    Order order = controller.getOrderById(orderId);
+                    if (order != null) {
+                        orderController.pdfInvoice(order);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "سفارش یافت نشد!", "خطا", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "لطفا ابتدا یک سفارش را انتخاب کنید!", "خطا", JOptionPane.ERROR_MESSAGE);
+            }
         
         });
         btnRefresh.addActionListener(e -> {
