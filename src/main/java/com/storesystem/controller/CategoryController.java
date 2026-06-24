@@ -1,8 +1,8 @@
 package com.storesystem.controller;
 
 import com.storesystem.model.Category;
-import com.storesystem.repository.CategoryRepository;
 import com.storesystem.service.CategoryService;
+import com.storesystem.util.AppContext;
 import com.storesystem.util.TableUtil;
 import com.storesystem.view.CategoryPanel;
 import java.util.List;
@@ -10,11 +10,12 @@ import java.util.ArrayList;
 
 public class CategoryController {
 
-    static final CategoryService categoryService = new CategoryService(new CategoryRepository());
+    private final CategoryService categoryService;
     private final CategoryPanel categoryPanel;
 
     public CategoryController(CategoryPanel categoryPanel) {
         this.categoryPanel = categoryPanel;
+        this.categoryService=AppContext.categoryService;
     }
 
     public String addCategory(String name) {

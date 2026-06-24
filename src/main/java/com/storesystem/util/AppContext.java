@@ -1,6 +1,7 @@
 package com.storesystem.util;
 
 import com.storesystem.config.InvoicePdfService;
+import com.storesystem.repository.CategoryRepository;
 import com.storesystem.repository.CustomerRepository;
 import com.storesystem.repository.OrderRepository;
 import com.storesystem.repository.ProductRepository;
@@ -11,7 +12,9 @@ public class AppContext {
     public static final ProductRepository productRepository = new ProductRepository();
     public static final CustomerRepository customerRepository = new CustomerRepository();
     public static final OrderRepository orderRepository = new OrderRepository();
+    public static final CategoryRepository categoryRepository= new CategoryRepository();
 
+    public static final CategoryService categoryService = new CategoryService(categoryRepository);
     public static final ProductService productService = new ProductService(productRepository);
     public static final CustomerService customerService = new CustomerService(customerRepository);
     public static final OrderService orderService = new OrderService(orderRepository, customerRepository);

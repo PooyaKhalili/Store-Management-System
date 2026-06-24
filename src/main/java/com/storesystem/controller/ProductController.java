@@ -2,8 +2,9 @@ package com.storesystem.controller;
 
 import com.storesystem.model.Product;
 import com.storesystem.model.Category;
-import com.storesystem.repository.ProductRepository;
+import com.storesystem.service.CategoryService;
 import com.storesystem.service.ProductService;
+import com.storesystem.util.AppContext;
 import com.storesystem.util.CsvUtil;
 import com.storesystem.util.TableUtil;
 import com.storesystem.view.ProductPanel;
@@ -15,13 +16,16 @@ import java.util.ArrayList;
 
 public class ProductController {
 
-    static final ProductService productService = new ProductService(new ProductRepository());
+    private ProductService productService;
+    private CategoryService categoryService;
     private final ProductPanel productPanel;
     private final DecimalFormat priceFormatter = new DecimalFormat("###,###,###");
 
 
     public ProductController(ProductPanel productPanel) {
         this.productPanel = productPanel;
+        this.productService=AppContext.productService;
+        this.categoryService=AppContext.categoryService;
     }
 
     public String addProduct(String name, String priceStr, String stockStr, String categoryName){
@@ -115,7 +119,7 @@ public class ProductController {
             
             model.addElement("همه");
 
-            List<Category> categories = CategoryController.categoryService.getAllCategories();
+            List<Category> categories = categoryService.getAllCategories();
             
             if (categories != null) {
                 for (Category category : categories) {
@@ -219,7 +223,7 @@ public class ProductController {
     }
     
     private int getCategoryIdByName(String name) {
-        for (Category category : CategoryController.categoryService.getAllCategories()) {
+        for (Category category : categoryService.getAllCategories()) {
             if (category.getName().equals(name)) {
                 return category.getId();
             }
@@ -229,7 +233,7 @@ public class ProductController {
 
     private String getCategoryNameById(int id) {
         try {
-            Category category = CategoryController.categoryService.getCategoryById(id);
+            Category category = categoryService.getCategoryById(id);
             return category.getName();
         } catch (Exception e) {
             return "نامشخص";
