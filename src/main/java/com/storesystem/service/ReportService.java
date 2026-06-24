@@ -1,13 +1,11 @@
 package com.storesystem.service;
 
 
+import com.ibm.icu.text.DecimalFormat;
 import com.storesystem.model.Customer;
 import com.storesystem.model.Order;
 import com.storesystem.model.OrderItem;
 import com.storesystem.model.Product;
-import com.storesystem.repository.CustomerRepository;
-import com.storesystem.repository.OrderRepository;
-import com.storesystem.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +13,7 @@ public class ReportService {
     private final OrderService orderService;
     private final ProductService productService;
     private final CustomerService customerService;
+    private final DecimalFormat priceFormatter = new DecimalFormat("###,###,###");
 
     public ReportService(OrderService orderService,ProductService productService,CustomerService customerService){
         this.orderService = orderService;
@@ -22,9 +21,9 @@ public class ReportService {
         this.customerService = customerService;
     }
 
-    public Double getTotalAmount(){
+    public long getTotalAmount(){
         List<Order> orders = orderService.getAllOrders();
-        Double total = 0D;
+        long total = 0L;
         for(var order : orders)
             total+=order.getTotalAmount();
         return total;
@@ -82,7 +81,8 @@ public class ReportService {
                 }
             }
             if(!found){
-                result.add(new Object[]{customerName,1,orderAmount});
+                String formatted = priceFormatter.format(orderAmount);
+                result.add(new Object[]{customerName,1,formatted});
             }
         }
         result.sort((row1, row2) -> ((Double) row2[2]).compareTo((Double) row1[2]));

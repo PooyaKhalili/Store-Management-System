@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+
+import com.ibm.icu.text.DecimalFormat;
 import com.storesystem.config.SetupUI;
 import com.storesystem.util.TableUtil;
 import com.storesystem.controller.ReportController;
@@ -34,6 +36,7 @@ public class ReportPanel extends JPanel {
     private int total=0;
 
     private final ReportController controller;
+    private final DecimalFormat priceFormatter = new DecimalFormat("###,###,###");
 
     public ReportPanel() {
         initComponents();
@@ -122,8 +125,9 @@ public class ReportPanel extends JPanel {
         return bottomTable;
     }
 
-    public void setTotalRevenue(int total){
-        totalRevenueLabel.setText( "درآمد کل:" + total + "ریال");
+    public void setTotalRevenue(long total){
+        String formattedTotal = priceFormatter.format(total);
+        totalRevenueLabel.setText( "درآمد کل:" + formattedTotal + "ریال");
     }
 
     public JButton getRefreshButton(){
