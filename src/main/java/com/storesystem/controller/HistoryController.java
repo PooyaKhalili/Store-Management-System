@@ -24,7 +24,6 @@ public class HistoryController  {
                     order.getCustomerId(),
                     order.getOrderDate(),
                     order.getTotalAmount(),
-                    priceFormatter.format(order.getTotalAmount()),
                     "0",
                     "0",
                     priceFormatter.format(order.getTotalAmount())
@@ -133,7 +132,6 @@ public class HistoryController  {
                     order.getCustomerId(),
                     order.getOrderDate(),
                     order.getTotalAmount(),
-                    priceFormatter.format(order.getTotalAmount()),
                     "0",
                     "0",
                     priceFormatter.format(order.getTotalAmount())

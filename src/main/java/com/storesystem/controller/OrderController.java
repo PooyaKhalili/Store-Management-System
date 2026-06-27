@@ -266,7 +266,7 @@ public class OrderController {
             long customerId;
 
             if (customerDetails.equals("مشتری عمومی")) {
-                customerId = 0;
+                return "لطفاً یک مشتری معتبر انتخاب کنید! مشتری عمومی قابل انتخاب نیست.";
             } else {
                 String idPart = customerDetails.split("-")[0].trim();
                 customerId = Long.parseLong(idPart);
@@ -294,17 +294,18 @@ public class OrderController {
 
             String orderDate = getCurrentJalaliDateTime();
 
-            for (CartItem item : currentCart) {
-                    productService.reduceStock(
-                    item.product.getCode(),
-                    item.quantity
-                );
+            Order newOrder = null;
+            try {
+                newOrder = orderService.createOrder(customerId, orderDate, orderItems);
+            } catch (Exception e) {
+                return "خطا در ثبت سفارش: " + e.getMessage();
             }
 
-            Order newOrder = orderService.createOrder(customerId, orderDate, orderItems);
+            if (newOrder == null) {return "سفارش ثبت نشد!";}
 
-            if (newOrder == null) {
-                return "سفارش ثبت نشد!";
+
+            for (CartItem item : currentCart) {
+                productService.reduceStock(item.product.getCode(), item.quantity);
             }
             currentCart.clear();
             refreshCartTable();

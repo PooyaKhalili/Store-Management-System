@@ -4,35 +4,35 @@
     "name": "کتاب مهندسی نرم‌افزار ایان سامرویل",
     "price": 3100000,
     "categoryId": 9,
-    "stock": 76
+    "stock": 46
   },
   {
     "code": 435458,
     "name": "گردنبند نقره زنانه طرح مرغ آمین",
     "price": 4500000,
     "categoryId": 17,
-    "stock": 21
+    "stock": 0
   },
   {
     "code": 341507,
     "name": "مربای آلبالو کامبیز ۵۰۰ گرمی",
     "price": 550000,
     "categoryId": 1,
-    "stock": 177
+    "stock": 172
   },
   {
     "code": 987144,
     "name": "کیف پول چرم طبیعی مردانه درسا",
     "price": 14500000,
     "categoryId": 17,
-    "stock": 27
+    "stock": 0
   },
   {
     "code": 890372,
     "name": "کتاب جنایت و مکافات اثر داستایفسکی",
     "price": 2450000,
     "categoryId": 8,
-    "stock": 57
+    "stock": 56
   },
   {
     "code": 844575,
@@ -978,6 +978,13 @@
     "price": 1250000,
     "categoryId": 1,
     "stock": 120
+  },
+  {
+    "code": 397821,
+    "name": "دفتر 100 برگ",
+    "price": 20000,
+    "categoryId": 18,
+    "stock": 0
   },
   {
     "code": 483067,
